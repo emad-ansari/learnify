@@ -1,0 +1,122 @@
+/* ============================================================
+   global.css — Learnify Design Tokens & Base Styles
+   Used with NativeWind v4 + Tailwind CSS
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────────
+   CSS CUSTOM PROPERTIES (Design Tokens)
+   These mirror the Tailwind theme so you can use them in
+   inline styles or react-native-reanimated interpolations.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  /* --- PRIMARY (Teal) --- */
+  --color-primary: #229f92; /* Sign Up button bg */
+  --color-primary-light: #84d0c9; /* Screen radial gradient start */
+  --color-primary-muted: #97d1cb; /* Welcome-back badge bg */
+  --color-primary-subtle: #ccefeb; /* Form container background */
+  --color-primary-dark: #1a7e73; /* [ADJUSTED] pressed/active state — darkened for contrast */
+
+  /* --- SECONDARY / ACCENT (Deep Teal) --- */
+  --color-secondary: #2e5652; /* Welcome-back badge text */
+  --color-secondary-light: #5a7b78; /* Username label text */
+  --color-secondary-muted: #819c99; /* Input field border */
+
+  /* --- FOREGROUND (Text) --- */
+  --color-fg: #2e5652; /* Primary text on light bg */
+  --color-fg-muted: #7d7d7d; /* Paragraph / supporting text */
+  --color-fg-subtle: #92a5a3; /* Input placeholder & icons */
+  --color-fg-strong: #1c3734; /* [ADJUSTED] Headings — derived by darkening secondary */
+
+  /* --- BACKGROUND --- */
+  --color-bg: #f9f9fb; /* Base screen background (gradient end) */
+  --color-bg-gradient: #84d0c9; /* Radial gradient start */
+  --color-bg-surface: #ccefeb; /* Card / form surface */
+  --color-bg-input: #ffffff; /* [ADJUSTED] Input fill — white for clean contrast on surface */
+
+  /* --- BORDER --- */
+  --color-border: #819c99; /* Default input border */
+  --color-border-focus: #229f92; /* [ADJUSTED] Focus ring — reuses primary for consistency */
+
+  /* --- STATUS --- */
+  --color-success: #229f92; /* Positive states */
+  --color-error: #d9534f; /* [ADJUSTED] Validation errors — standard accessible red */
+  --color-warning: #e8a838; /* [ADJUSTED] Warnings — warm amber added for future use */
+
+  /* --- SPACING / SHAPE --- */
+  --radius-input: 12px;
+  --radius-card: 24px;
+  --radius-badge: 999px;
+  --radius-btn: 16px;
+
+  /* --- TYPOGRAPHY --- */
+  --font-sans: "Poppins_400Regular", sans-serif;
+  --font-medium: "Poppins_500Medium", sans-serif;
+  --font-semibold: "Poppins_600SemiBold", sans-serif;
+  --font-bold: "Poppins_700Bold", sans-serif;
+
+  /* --- SHADOW (for card elevation) --- */
+  --shadow-card: 0 8px 32px rgba(46, 86, 82, 0.1);
+  --shadow-btn: 0 4px 16px rgba(34, 159, 146, 0.35);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   COMPONENT LAYER — Reusable utility combos (web only)
+   In React Native / NativeWind, prefer className strings.
+   ───────────────────────────────────────────────────────────── */
+@layer components {
+  /* Screen base — mimics the radial gradient bg */
+  .screen-bg {
+    @apply flex-1 bg-background;
+    background: radial-gradient(
+      ellipse at 50% 0%,
+      var(--color-bg-gradient) 0%,
+      var(--color-bg) 65%
+    );
+  }
+
+  /* Form card / surface */
+  .card-surface {
+    @apply bg-background-surface rounded-[24px] px-6 py-8;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Welcome badge pill */
+  .badge-welcome {
+    @apply bg-primary-muted rounded-[999px] px-5 py-1.5
+           text-secondary font-semibold tracking-widest text-xs uppercase;
+  }
+
+  /* Input field */
+  .input-field {
+    @apply w-full bg-background-input border border-border rounded-[12px]
+           px-4 py-3 text-sm text-foreground
+           placeholder:text-foreground-subtle
+           focus:border-border-focus focus:outline-none;
+  }
+
+  /* Input label */
+  .input-label {
+    @apply text-secondary-light text-sm font-medium mb-1;
+  }
+
+  /* Primary CTA button */
+  .btn-primary {
+    @apply w-full bg-primary rounded-[16px] py-4
+           text-white font-bold text-base text-center;
+    box-shadow: var(--shadow-btn);
+  }
+
+  /* Muted paragraph text */
+  .text-body-muted {
+    @apply text-foreground-muted text-sm text-center leading-relaxed;
+  }
+
+  /* Subtle legal / footer text */
+  .text-legal {
+    @apply text-foreground-subtle text-xs text-center;
+  }
+}
