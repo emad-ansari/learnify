@@ -20,7 +20,7 @@
  *   npm install react-native-svg   (for inline SVG icons)
  */
 
-import { FontAwesome6, Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import React, { useCallback, useState } from 'react'
@@ -38,108 +38,15 @@ import Animated, {
   FadeInDown,
   FadeInLeft,
   FadeInUp,
-  useAnimatedStyle,
   useSharedValue,
   withRepeat,
   withSequence,
-  withSpring,
   withTiming,
   ZoomIn,
 } from 'react-native-reanimated'
 
-// ─── Animated InputField component ───────────────────────────────────────────
-interface InputFieldProps {
-  label: string
-  placeholder: string
-  icon: React.ReactNode
-  value: string
-  onChangeText: (t: string) => void
-  secureTextEntry?: boolean
-  keyboardType?: 'default' | 'email-address'
-  delay?: number
-  error?: string
-}
-
-const InputField: React.FC<InputFieldProps> = ({
-  label,
-  placeholder,
-  icon,
-  value,
-  onChangeText,
-  secureTextEntry = false,
-  keyboardType = 'default',
-  delay = 0,
-  error,
-}) => {
-  const [focused, setFocused] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-
-  // Animate border colour on focus
-  const borderProgress = useSharedValue(0)
-  const handleFocus = () => {
-    setFocused(true)
-    borderProgress.value = withTiming(1, { duration: 250 })
-  }
-  const handleBlur = () => {
-    setFocused(false)
-    borderProgress.value = withTiming(0, { duration: 250 })
-  }
-
-  const animatedBorder = useAnimatedStyle(() => ({
-    borderColor: borderProgress.value === 1 ? '#229F92' : '#819C99',
-    // Slight scale-up on focus for "breathing" effect
-    transform: [{ scale: withSpring(focused ? 1.005 : 1) }],
-  }))
-
-  return (
-    <Animated.View
-      entering={FadeInLeft.delay(delay).duration(500).springify()}
-      className="mb-5"
-    >
-      <Text className="text-secondary-light font-medium text-sm mb-1.5">
-        {label}
-      </Text>
-
-      <Animated.View
-        className="flex-row items-center bg-transparent rounded-input border-[1.5px] px-[14px]  shadow-sm shadow-secondary h-11"
-        style={animatedBorder}
-      >
-        <View className="mr-2.5">{icon}</View>
-
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          placeholderTextColor="#92A5A3"
-          secureTextEntry={secureTextEntry && !showPassword}
-          keyboardType={keyboardType}
-          autoCapitalize="none"
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          className="flex-1 text-[14px] text-secondary font-sans py-0"
-        />
-
-        {/* Show/hide toggle for password */}
-        {secureTextEntry && (
-          <Pressable onPress={() => setShowPassword((v) => !v)} hitSlop={8}>
-            {showPassword ? (
-              <FontAwesome6 name="eye-slash" size={14} color={'#229f92'} />
-            ) : (
-              <FontAwesome6 name="eye" size={14} color={'#92A5A3'} />
-            )}
-          </Pressable>
-        )}
-      </Animated.View>
-
-      {error ? (
-        <Text className="text-error text-[12px] mt-1">{error}</Text>
-      ) : null}
-    </Animated.View>
-  )
-}
-
 // ─── Main Screen ──────────────────────────────────────────────────────────────
-export default function SignupScreen() {
+export default function SigninScreen() {
   const router = useRouter()
 
   const [username, setUsername] = useState('')
@@ -202,7 +109,7 @@ export default function SignupScreen() {
         className="absolute top-0 bottom-0 left-0 right-0"
       />
 
-      <View >
+      <View className="flex-1">
         {/* ── Hero illustration ── */}
         <Animated.View
           entering={FadeInDown.duration(700).springify()}
@@ -219,7 +126,7 @@ export default function SignupScreen() {
         {/* ── Form card ── */}
         <Animated.View
           entering={FadeInUp.delay(200).duration(600).springify().damping(18)}
-          className="mt-4 bg-primary-subtle px-6 py-4  "
+          className="mt-4 bg-primary-subtle px-6 py-4 flex-1 "
           style={{
             borderTopLeftRadius: 32,
             borderTopRightRadius: 32,
@@ -232,7 +139,7 @@ export default function SignupScreen() {
           >
             <View className="bg-primary-muted rounded-full px-4 py-1 flex items-center justify-center">
               <Text className="text-secondary text-sm font-semibold tracking-[1px] uppercase">
-                Join Now
+                Welcome Back
               </Text>
             </View>
           </Animated.View>
@@ -240,32 +147,10 @@ export default function SignupScreen() {
           {/* Tagline */}
           <Animated.Text
             entering={FadeInLeft.delay(500).duration(450)}
-            className="text-secondary-light text-sm font-sans text-center leading-[20px] mb-7 px-2"
+            className="text-secondary-light text-sm font-sans text-center leading-[20px] mb-4 px-2"
           >
-            Explore courses you love and unlock knowledge{'\n'}
-            anytime, anywhere.
+            Welcome Back! Sign in to your account
           </Animated.Text>
-
-          {/* User Name Field */}
-          <View className="mb-5">
-            <Text className="text-secondary-light font-medium text-sm mb-1.5">
-              User Name
-            </Text>
-            <View className="bg-transparent border border-border rounded-2xl h-14 flex flex-row items-center px-4">
-              <FontAwesome6 name="user" size={17} color={'#5a7b78'} />
-              <TextInput
-                value={username}
-                onChangeText={setUsername}
-                placeholder="John Doe"
-                placeholderTextColor="#92A5A3"
-                keyboardType="default"
-                autoCapitalize="none"
-                // onFocus={handleFocus}
-                // onBlur={handleBlur}
-                className="ml-2 flex-1 text-secondary-light"
-              />
-            </View>
-          </View>
 
           {/* Email Field */}
           <View className="mb-5">
@@ -318,7 +203,7 @@ export default function SignupScreen() {
               className="bg-primary rounded-btn py-4 items-center shadow-lg shadow-primary elevation-8"
             >
               <Text className="text-white text-base font-bold tracking-[0.3px]">
-                Sign Up
+                Sign In
               </Text>
             </TouchableOpacity>
           </Animated.View>
@@ -329,22 +214,23 @@ export default function SignupScreen() {
             className="items-center mt-5"
           >
             <Pressable
-              onPress={() => router.replace('/(auth)/signin')}
+              onPress={() => router.replace('/(auth)/signup')}
               hitSlop={10}
             >
               <Text className="text-foreground-muted text-[13px] font-sans">
-                Already have an account?{' '}
-                <Text className="text-primary font-semibold">Login</Text>
+                Don't have an account?{' '}
+                <Text className="text-primary font-semibold">Register</Text>
               </Text>
             </Pressable>
           </Animated.View>
 
           {/* Legal footer */}
+
           <Animated.Text
             entering={FadeInUp.delay(1050).duration(400)}
             className="text-foreground-subtle text-[11px] font-sans text-center mt-5 px-8 leading-4"
           >
-            By signing up, you agree to our{' '}
+            By signing in, you agree to our{' '}
             <Text className="text-primary">Terms</Text> and{' '}
             <Text className="text-primary">Privacy Policy</Text>
           </Animated.Text>
