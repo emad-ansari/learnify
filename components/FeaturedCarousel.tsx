@@ -3,12 +3,11 @@ import { Dimensions, Pressable, ScrollView, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { Feather } from "@expo/vector-icons";
-import { C } from "../constants/theme";
 
 const { width: SW } = Dimensions.get("window");
 
-export const FEATURED = [
-  { id: "0", tag: "Featured",    title: "UI/UX Design Fundamentals", author: "By Sarah Jenkins", colors: [C.primary, C.primaryDark] as const },
+const FEATURED = [
+  { id: "0", tag: "Featured",    title: "UI/UX Design Fundamentals", author: "By Sarah Jenkins", colors: ["#229F92", "#1A7E73"] as const },
   { id: "1", tag: "Trending",    title: "Machine Learning A–Z",      author: "By Raj Patel",    colors: ["#5B7FA6", "#3A5A80"] as const },
   { id: "2", tag: "New Launch",  title: "iOS App Development",       author: "By Kim Lee",      colors: ["#9B8EC4", "#7B6AAD"] as const },
 ];
@@ -16,66 +15,71 @@ export const FEATURED = [
 export const FeaturedCarousel = () => {
   const [active, setActive] = useState(0);
   const scrollRef = useRef<ScrollView>(null);
-  const cardWidth = SW - 40;
+  
+  // Explicitly smaller width to ensure the next card is visible
+  const cardWidth = SW * 0.80; 
+  const gap = 16;
+  const snapInterval = cardWidth + gap;
 
   useEffect(() => {
     const interval = setInterval(() => {
       setActive((prev) => {
         const next = (prev + 1) % FEATURED.length;
-        scrollRef.current?.scrollTo({ x: next * cardWidth, animated: true });
+        scrollRef.current?.scrollTo({ x: next * snapInterval, animated: true });
         return next;
       });
-    }, 4000);
+    }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [snapInterval]);
 
   return (
     <Animated.View entering={FadeInDown.delay(350).duration(600).springify()}>
       <ScrollView
         ref={scrollRef}
         horizontal
-        pagingEnabled
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={(e) => {
-          setActive(Math.round(e.nativeEvent.contentOffset.x / cardWidth));
+          setActive(Math.round(e.nativeEvent.contentOffset.x / snapInterval));
         }}
-        style={{ marginHorizontal: -20 }}
+        className="-mx-5"
         contentContainerStyle={{ paddingHorizontal: 20 }}
-        snapToInterval={cardWidth + 0}
+        snapToInterval={snapInterval}
         decelerationRate="fast"
       >
         {FEATURED.map((item, i) => (
-          <View key={item.id} style={{ width: cardWidth, marginRight: i < FEATURED.length - 1 ? 0 : 0 }}>
+          <View 
+            key={item.id} 
+            style={{ width: cardWidth, marginRight: gap }}
+          >
             <LinearGradient
               colors={item.colors}
               start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-              style={{ borderRadius: 24, padding: 24, minHeight: 170, overflow: "hidden" }}
+              className="p-6 min-h-[180px] overflow-hidden"
+              style={{ borderRadius: 24 }}
             >
               {/* Decorative background shape */}
-              <View style={{ position: "absolute", right: -10, top: -10, opacity: 0.18 }}>
-                <Feather name="layers" color={C.white} size={130} />
+              <View className="absolute -right-2.5 -top-2.5 opacity-20">
+                <Feather name="layers" color="white" size={130} />
               </View>
 
-              <View style={{ alignSelf: "flex-start", backgroundColor: "rgba(255,255,255,0.22)",
-                borderRadius: 99, paddingHorizontal: 12, paddingVertical: 4, marginBottom: 14 }}>
-                <Text style={{ color: C.white, fontSize: 11, fontFamily: "Poppins_500Medium", letterSpacing: 0.5 }}>
+              <View className="self-start bg-white/20 rounded-full px-3 py-1 mb-3.5">
+                <Text className="text-white text-[11px] font-medium tracking-widest uppercase">
                   {item.tag}
                 </Text>
               </View>
 
-              <Text style={{ fontSize: 22, fontFamily: "Poppins_700Bold", color: C.white,
-                lineHeight: 30, maxWidth: "65%" }}>
+              <Text className="text-[22px] font-bold text-white leading-[30px] max-w-[80%]">
                 {item.title}
               </Text>
-              <Text style={{ color: "rgba(255,255,255,0.75)", fontSize: 12,
-                fontFamily: "Poppins_400Regular", marginTop: 4, marginBottom: 18 }}>
+              <Text className="text-white/75 text-[12px] font-normal mt-1.5 mb-[18px]">
                 {item.author}
               </Text>
 
-              <Pressable style={{ alignSelf: "flex-start", backgroundColor: C.white,
-                borderRadius: 50, paddingHorizontal: 20, paddingVertical: 10 }}>
-                <Text style={{ color: item.colors[0], fontSize: 13,
-                  fontFamily: "Poppins_600SemiBold" }}>
+              <Pressable className="self-start bg-white rounded-full px-6 py-2.5">
+                <Text 
+                  className="text-[13px] font-semibold" 
+                  style={{ color: item.colors[0] }}
+                >
                   Enroll Now
                 </Text>
               </Pressable>
@@ -85,13 +89,14 @@ export const FeaturedCarousel = () => {
       </ScrollView>
 
       {/* Dot indicators */}
-      <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 12, gap: 5 }}>
+      <View className="flex-row justify-center mt-4 gap-1.5">
         {FEATURED.map((_, i) => (
-          <Animated.View key={i} style={{
-            width: active === i ? 20 : 6, height: 6,
-            borderRadius: 3,
-            backgroundColor: active === i ? C.primary : C.primaryMuted,
-          }} />
+          <View 
+            key={i} 
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              active === i ? "w-5 bg-primary" : "w-1.5 bg-primary-muted/40"
+            }`} 
+          />
         ))}
       </View>
     </Animated.View>

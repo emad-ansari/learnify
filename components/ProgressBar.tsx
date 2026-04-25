@@ -6,7 +6,6 @@ import Animated, {
   withDelay,
   withSpring,
 } from "react-native-reanimated";
-import { C } from "../constants/theme";
 
 interface ProgressBarProps {
   progress: number;
@@ -16,7 +15,7 @@ interface ProgressBarProps {
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
   progress,
-  color = C.primary,
+  color = "#229F92",
   delay = 0,
 }) => {
   const width = useSharedValue(0);
@@ -26,8 +25,14 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const style = useAnimatedStyle(() => ({ width: `${width.value * 100}%` as any }));
 
   return (
-    <View style={{ height: 5, backgroundColor: `${color}25`, borderRadius: 99, overflow: "hidden", marginVertical: 8 }}>
-      <Animated.View style={[{ height: "100%", backgroundColor: color, borderRadius: 99 }, style]} />
+    <View 
+      className="h-[5px] rounded-full overflow-hidden my-2" 
+      style={{ backgroundColor: `${color}25` }}
+    >
+      <Animated.View 
+        className="h-full rounded-full" 
+        style={[{ backgroundColor: color }, style]} 
+      />
     </View>
   );
 };

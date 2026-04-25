@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Pressable, ScrollView, Text } from "react-native";
 import Animated, { FadeInLeft } from "react-native-reanimated";
-import { C } from "../constants/theme";
 
 export const CATEGORIES = ["All", "Programming", "Design", "Data", "Business", "Creative"];
 
@@ -18,23 +17,16 @@ export const CategoryFilter = () => {
             <Pressable
               key={cat}
               onPress={() => setSelected(i)}
-              style={{
-                paddingHorizontal: 18, paddingVertical: 9,
-                borderRadius: 50,
-                backgroundColor: isActive ? C.primary : C.bgSurface,
-                borderWidth: 1.5,
-                borderColor: isActive ? C.primary : C.primaryMuted,
-                shadowColor: isActive ? C.primary : "transparent",
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.3,
-                shadowRadius: 8,
-                elevation: isActive ? 6 : 0,
-              }}
+              className={`px-[18px] py-[9px] rounded-full border-[1.5px] ${
+                isActive 
+                  ? "bg-primary border-primary shadow-lg shadow-primary/30" 
+                  : "bg-white border-primary-muted"
+              }`}
+              style={{ elevation: isActive ? 6 : 0 }}
             >
-              <Text style={{
-                fontSize: 13, fontFamily: "Poppins_500Medium",
-                color: isActive ? C.white : C.secondaryLight,
-              }}>
+              <Text className={`text-[13px] font-medium ${
+                isActive ? "text-white" : "text-secondary-light"
+              }`}>
                 {cat}
               </Text>
             </Pressable>

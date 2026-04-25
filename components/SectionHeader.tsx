@@ -1,7 +1,6 @@
 import React from "react";
 import { Pressable, Text } from "react-native";
 import Animated, { FadeInLeft } from "react-native-reanimated";
-import { C } from "../constants/theme";
 
 interface SectionHeaderProps {
   title: string;
@@ -11,13 +10,13 @@ interface SectionHeaderProps {
 export const SectionHeader: React.FC<SectionHeaderProps> = ({ title, delay = 0 }) => (
   <Animated.View
     entering={FadeInLeft.delay(delay).duration(400)}
-    style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}
+    className="flex-row justify-between items-center mb-3.5"
   >
-    <Text style={{ fontSize: 18, fontFamily: "Poppins_700Bold", color: C.fgStrong, letterSpacing: -0.3 }}>
+    <Text className="text-[18px] font-bold text-foreground-strong tracking-tight">
       {title}
     </Text>
     <Pressable>
-      <Text style={{ fontSize: 13, fontFamily: "Poppins_500Medium", color: C.primary }}>See all</Text>
+      <Text className="text-[13px] font-medium text-primary">See all</Text>
     </Pressable>
   </Animated.View>
 );

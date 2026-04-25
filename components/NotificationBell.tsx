@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 import { Feather } from "@expo/vector-icons";
-import { C } from "../constants/theme";
 
 export const NotificationBell = () => {
   const rotate = useSharedValue(0);
@@ -25,12 +24,9 @@ export const NotificationBell = () => {
 
   return (
     <Animated.View style={style}>
-      <View style={{ position: "relative" }}>
-        <Feather name="bell" size={22} color={C.secondary} />
-        <View style={{ position: "absolute", top: 0, right: 0,
-          width: 8, height: 8, borderRadius: 4,
-          backgroundColor: "#E05C7A",
-          borderWidth: 1.5, borderColor: C.bgDefault }} />
+      <View className="relative">
+        <Feather name="bell" size={22} color="#2E5652" />
+        <View className="absolute top-0 right-0 w-2 h-2 rounded-full bg-[#E05C7A] border-[1.5px] border-background" />
       </View>
     </Animated.View>
   );

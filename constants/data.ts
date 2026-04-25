@@ -3,46 +3,54 @@ import { C } from "./theme";
 export const CATEGORIES = ["All", "Programming", "Design", "Data", "Business", "Creative"];
 
 export const POPULAR_COURSES = [
-  { 
-    id: "1", 
-    category: "Design",   
-    title: "Visual Identity Design",    
-    instructor: "Sarah Jenkins",
-    thumbnail: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=400&auto=format&fit=crop",
+  {
+    id: "p1",
+    category: "Design",
+    title: "Advanced UI/UX Design Systems",
+    instructor: "Jaxson Culhane",
+    instructorAvatar: "https://i.pravatar.cc/150?u=p1",
+    description: "Learn how to build scalable design systems for modern applications with clarity and emotional connection.",
+    thumbnail: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop",
     rating: 4.8,
     reviews: "1.2k",
-    price: "$24.99",
+    price: "$45.00"
   },
-  { 
-    id: "2", 
-    category: "Business", 
-    title: "Growth Marketing 101",       
-    instructor: "David Miller",
-    thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=400&auto=format&fit=crop",
-    rating: 4.5,
-    reviews: "850",
-    price: "$19.99",
-  },
-  { 
-    id: "3", 
-    category: "Code",     
-    title: "Python for Data Science",    
-    instructor: "Raj Patel",
-    thumbnail: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=400&auto=format&fit=crop",
+  {
+    id: "p2",
+    category: "Code",
+    title: "React Native Masterclass 2024",
+    instructor: "Sarah Jenkins",
+    instructorAvatar: "https://i.pravatar.cc/150?u=p2",
+    description: "Master cross-platform mobile development with React Native, Reanimated, and NativeWind styling.",
+    thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=800&auto=format&fit=crop",
     rating: 4.9,
-    reviews: "2.1k",
-    price: "$49.99",
+    reviews: "850",
+    price: "$59.99"
   },
-  { 
-    id: "4", 
-    category: "Creative", 
-    title: "Digital Illustration",    
+  {
+    id: "p3",
+    category: "Marketing",
+    title: "Digital Marketing Strategy",
     instructor: "Kim Lee",
-    thumbnail: "https://images.unsplash.com/photo-1541462608141-ad4d769421a1?q=80&w=400&auto=format&fit=crop",
+    instructorAvatar: "https://i.pravatar.cc/150?u=p3",
+    description: "Develop a comprehensive digital marketing strategy to grow your brand and reach new customers effectively.",
+    thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop",
     rating: 4.7,
-    reviews: "940",
-    price: "$29.99",
+    reviews: "2.1k",
+    price: "$32.50"
   },
+  {
+    id: "p4",
+    category: "Business",
+    title: "Startup Growth Hacking",
+    instructor: "Alex Rivera",
+    instructorAvatar: "https://i.pravatar.cc/150?u=p4",
+    description: "Learn the secrets behind the rapid growth of some of the world's most successful tech startups.",
+    thumbnail: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=800&auto=format&fit=crop",
+    rating: 4.6,
+    reviews: "540",
+    price: "$49.00"
+  }
 ];
 
 export const CONTINUE_COURSES = [

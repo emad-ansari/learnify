@@ -1,97 +1,108 @@
-import React from "react";
-import { Pressable, Text, View } from "react-native";
-import Animated, { FadeInDown, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
-import { Feather, FontAwesome6 } from "@expo/vector-icons";
-import { Image } from "expo-image";
-import { C } from "../constants/theme";
+import { Feather, FontAwesome6 } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
+import React from 'react'
+import { Image, Pressable, Text, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
+import { C } from '../constants/theme'
 
 export interface CourseCardProps {
-  category: string;
-  title: string;
-  instructor: string;
-  thumbnail: string;
-  rating: number;
-  reviews: string;
-  price: string;
-  delay?: number;
+  category: string
+  title: string
+  instructor: string
+  instructorAvatar?: string
+  thumbnail: string
+  rating: number
+  reviews: string
+  price: string
+  description?: string
+  width?: number
+  delay?: number
 }
 
-export const CourseCard: React.FC<CourseCardProps> = ({
-  category, title, instructor, thumbnail, rating, reviews, price, delay = 0,
+export const CourseCard: React.FC<CourseCardProps & { id?: string }> = ({
+  id,
+  title,
+  instructor,
+  thumbnail,
+  rating,
+  price,
+  description,
+  width,
+  delay = 0,
 }) => {
-  const scale = useSharedValue(1);
-  const cardStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+  const router = useRouter();
 
   return (
     <Animated.View
-      entering={FadeInDown.delay(delay).duration(500).springify().damping(16)}
-      style={[{ 
-        flex: 1, 
-        margin: 6, 
-        borderRadius: 24, 
-        backgroundColor: "#0A1A18", // Deep dark teal/black
-        padding: 12,
-        borderWidth: 1,
-        borderColor: "#1A2E2A",
-        shadowColor: "#000", 
-        shadowOffset: { width: 0, height: 8 }, 
-        shadowOpacity: 0.2,
-        shadowRadius: 16, 
-        elevation: 5 
-      }, cardStyle]}
+      entering={FadeInDown.delay(delay).duration(600)}
+      className="m-2 rounded-[30px] bg-white shadow-sm border border-black/5 overflow-hidden"
+      style={[{ elevation: 4, width: width }]}
     >
-      <Pressable
-        onPressIn={() => { scale.value = withSpring(0.98, { damping: 12 }); }}
-        onPressOut={() => { scale.value = withSpring(1, { damping: 12 }); }}
-        style={{ flex: 1 }}
+      <Pressable 
+        className="flex-1"
+        onPress={() => router.push({ pathname: '/course-details', params: { id: id || title } })}
       >
         {/* Thumbnail Area */}
-        <View style={{ height: 120, width: '100%', borderRadius: 18, overflow: 'hidden', marginBottom: 12 }}>
+        <View className="relative h-[170px] w-full">
           <Image
             source={{ uri: thumbnail }}
-            style={{ width: '100%', height: '100%' }}
-            contentFit="cover"
-            transition={300}
+            className="w-full h-full"
+            resizeMode="cover"
           />
+          {/* Bookmark Button Overlay */}
+          <Pressable
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/40 items-center justify-center"
+            style={{ borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' }}
+          >
+            <Feather name="bookmark" size={20} color="white" />
+          </Pressable>
         </View>
 
         {/* Content Area */}
-        <View style={{ flex: 1 }}>
-          {/* Rating Row */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, gap: 6 }}>
-            <FontAwesome6 name="star" size={10} color="#F59E0B" solid />
-            <Text style={{ fontSize: 12, fontFamily: "Poppins_600SemiBold", color: "#FFFFFF" }}>
-              {rating}
-            </Text>
-            <Text style={{ fontSize: 11, fontFamily: "Poppins_400Regular", color: "#92A5A3" }}>
-              ({reviews})
-            </Text>
-          </View>
-
+        <View className="p-5 pt-4">
           {/* Title */}
-          <Text 
-            style={{ fontSize: 14, fontFamily: "Poppins_700Bold", color: "#FFFFFF", lineHeight: 20, marginBottom: 4 }} 
+          <Text
+            className="text-[17px] font-bold text-[#1C3734] leading-[24px] mb-2"
             numberOfLines={2}
           >
             {title}
           </Text>
 
-          {/* Instructor (Optional but good) */}
-          <Text style={{ fontSize: 11, fontFamily: "Poppins_400Regular", color: "#229F92", marginBottom: 12 }}>
-            {instructor}
-          </Text>
+          {/* Instructor & Rating Row */}
+          <View className="flex-row items-center justify-between mb-4">
+            <Text className="text-[12px] font-medium text-foreground-muted">
+              {instructor}
+            </Text>
+            <View className="flex-row items-center gap-1 bg-amber-50 px-2 py-0.5 rounded-full">
+              <FontAwesome6 name="star" size={10} color="#F59E0B" solid />
+              <Text className="text-[12px] font-bold text-[#F59E0B]">
+                {rating}
+              </Text>
+            </View>
+          </View>
+
+          {/* Description (Optional) */}
+          {description && (
+            <Text
+              className="text-[12px] font-normal text-foreground-muted leading-[18px] mb-5"
+              numberOfLines={2}
+            >
+              {description}
+            </Text>
+          )}
 
           {/* Footer Row */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 'auto' }}>
-            <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: "#92A5A3" }}>
-              {category}
-            </Text>
-            <Text style={{ fontSize: 15, fontFamily: "Poppins_700Bold", color: "#F59E0B" }}>
-              {price}
-            </Text>
+          <View className="flex-row justify-between items-center mt-auto">
+             <View>
+               <Text className="text-[10px] font-bold text-foreground-subtle uppercase tracking-widest mb-1">Price</Text>
+               <Text className="text-[18px] font-bold text-primary">{price}</Text>
+            </View>
+            <Pressable className="bg-primary px-5 py-2.5 rounded-full">
+              <Text className="text-white text-[12px] font-bold">Enroll</Text>
+            </Pressable>
           </View>
         </View>
       </Pressable>
     </Animated.View>
-  );
-};
+  )
+}
