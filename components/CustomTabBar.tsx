@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from 'react-native'
+import { Feather } from '@expo/vector-icons'
 import { C } from '../constants/theme'
 
 export default function TabBar({
@@ -19,14 +20,13 @@ export default function TabBar({
   const [tabBarWidth, setTabBarWidth] = useState(0)
   const translateX = useRef(new Animated.Value(0)).current
 
-  // Filter routes to only show visible ones
+  // Filter routes to only show visible ones (e.g. hiding course-details)
   const visibleRoutes = state.routes.filter((route) => {
     return route.name !== 'course-details'
   })
 
   const tabWidth = tabBarWidth / visibleRoutes.length
 
-  // Measure the inner row width for accurate highlighter placement
   const onLayout = (e: LayoutChangeEvent) => {
     setTabBarWidth(e.nativeEvent.layout.width)
   }
@@ -41,47 +41,40 @@ export default function TabBar({
       Animated.spring(translateX, {
         toValue: activeIndex * tabWidth,
         useNativeDriver: true,
-        stiffness: 140,
-        damping: 18,
+        stiffness: 120,
+        damping: 16,
       }).start()
     }
   }, [state.index, tabWidth, visibleRoutes])
 
-  // Forced Light Theme colors
-  const tabTintColor = C.primary
-  const inactiveColor = "#92A5A3"
-  const highlighterColor = "#E6F6F4" // Very subtle primary tint
-
   return (
     <View 
-      className="absolute bottom-10 items-center flex-row justify-between rounded-full z-50"
+      className="absolute bottom-8 items-center flex-row justify-between rounded-full z-50 bg-white border border-black/5"
       style={{ 
-        backgroundColor: '#FFFFFF', 
-        borderWidth: 1, 
-        borderColor: 'rgba(0,0,0,0.05)',
-        width: '78%',
+        width: '85%',
+        maxWidth: 340,
         alignSelf: 'center',
-        paddingHorizontal: 6,
-        paddingVertical: 6,
-        // Premium soft shadow
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 12 },
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        shadowColor: '#1C3734',
+        shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.08,
         shadowRadius: 20,
-        elevation: 8,
+        elevation: 10,
       }}
     >
       <View
         className="relative flex-row items-center justify-between w-full"
         onLayout={onLayout}
       >
+        {/* The Sliding Pill Highlighter */}
         {tabWidth > 0 && (
           <Animated.View
             style={{
               position: 'absolute',
               width: tabWidth,
               height: '100%',
-              backgroundColor: highlighterColor,
+              backgroundColor: C.primary, // Vibrant theme color
               borderRadius: 999,
               transform: [{ translateX }],
             }}
@@ -105,27 +98,31 @@ export default function TabBar({
             }
           }
 
+          // Active states get pure white, inactive get muted gray
+          const iconColor = isFocused ? '#FFFFFF' : '#92A5A3'
+          
+          // Get correct icon name based on route
+          let iconName = 'home'
+          if (route.name === 'explore-courses') iconName = 'search'
+          if (route.name === 'profile') iconName = 'user'
+
           return (
             <PlatformPressable
               key={route.key}
               href={buildHref(route.name, route.params)}
               accessibilityState={isFocused ? { selected: true } : {}}
               onPress={onPress}
-              className="relative flex-1 items-center justify-center rounded-full py-2.5"
+              className="relative flex-1 items-center justify-center rounded-full py-3"
             >
-              {/* ICON */}
-              {options.tabBarIcon?.({
-                focused: isFocused,
-                color: isFocused ? tabTintColor : inactiveColor,
-                size: 20,
-              })}
-
+              <Feather name={iconName as any} size={20} color={iconColor} />
+              
               <Text
                 style={{ 
                   fontSize: 10, 
-                  fontFamily: isFocused ? 'Poppins_600SemiBold' : 'Poppins_400Regular',
-                  marginTop: 2,
-                  color: isFocused ? tabTintColor : inactiveColor
+                  fontFamily: isFocused ? 'Poppins_600SemiBold' : 'Poppins_500Medium',
+                  marginTop: 3,
+                  color: iconColor,
+                  letterSpacing: 0.3
                 }}
               >
                 {label}

@@ -1,11 +1,3 @@
-/**
- * course-details.tsx — Learnify
- *
- * A premium, next-level course details screen.
- * Moved outside the (tabs) directory to ensure it renders full-screen
- * and hides the floating tab bar underneath.
- */
-
 import { Feather, FontAwesome6 } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'

@@ -1,9 +1,4 @@
-/**
- * profile.tsx — Learnify
- *
- * A clean, minimalist, senior-designer level profile screen.
- * perfectly matched with the app's color theme.
- */
+
 
 import { Feather } from '@expo/vector-icons'
 import React from 'react'

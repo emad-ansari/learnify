@@ -1,19 +1,13 @@
-/**
- * ExploreCoursesScreen.tsx — Learnify
- *
- * An ultra-minimalist, next-level explore experience.
- */
-
 import { Feather } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import {
+  Platform,
+  Pressable,
   ScrollView,
   StatusBar,
   Text,
   TextInput,
   View,
-  Pressable,
-  Platform,
 } from 'react-native'
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
 
@@ -32,11 +26,13 @@ export default function ExploreCoursesScreen() {
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
       {/* ── HEADER (Unified with background) ── */}
-      <View 
+      <View
         className="px-6 pt-10 pb-2 bg-white"
         style={{ paddingTop: Platform.OS === 'ios' ? 60 : 40 }}
       >
-        <Animated.View entering={FadeInUp.duration(600).springify().damping(20)}>
+        <Animated.View
+          entering={FadeInUp.duration(600).springify().damping(20)}
+        >
           <Text className="text-[34px] font-bold text-[#1C3734] tracking-tight mb-6 mt-2">
             Explore
           </Text>
@@ -64,7 +60,7 @@ export default function ExploreCoursesScreen() {
         contentContainerStyle={{ paddingBottom: 120 }}
       >
         {/* ── CATEGORIES ── */}
-        <Animated.View 
+        <Animated.View
           entering={FadeInDown.delay(200).duration(600)}
           className="pt-6 pb-2"
         >
@@ -81,34 +77,33 @@ export default function ExploreCoursesScreen() {
               Top Results
             </Text>
             <Pressable>
-              <Text className="text-[13px] font-semibold text-[#229F92]">Filters</Text>
+              <Text className="text-[13px] font-semibold text-[#229F92]">
+                Filters
+              </Text>
             </Pressable>
           </View>
 
           {/* Vertical List of Course Cards */}
           <View>
             {POPULAR_COURSES.map((course, i) => (
-              <Animated.View 
-                key={course.id} 
-                entering={FadeInDown.delay(300 + (100 * i)).duration(600)}
+              <Animated.View
+                key={course.id}
+                entering={FadeInDown.delay(300 + 100 * i).duration(600)}
               >
-                <CourseCard 
-                  {...course} 
+                <CourseCard
+                  {...course}
                   delay={0} // Animation handled by the wrapper
                 />
               </Animated.View>
             ))}
-            
+
             {/* Repeated for visual density */}
             {POPULAR_COURSES.map((course, i) => (
-              <Animated.View 
-                key={course.id + "_2"} 
-                entering={FadeInDown.delay(700 + (100 * i)).duration(600)}
+              <Animated.View
+                key={course.id + '_2'}
+                entering={FadeInDown.delay(700 + 100 * i).duration(600)}
               >
-                <CourseCard 
-                  {...course} 
-                  delay={0}
-                />
+                <CourseCard {...course} delay={0} />
               </Animated.View>
             ))}
           </View>

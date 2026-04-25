@@ -1,9 +1,3 @@
-/**
- * HomeScreen.tsx — Learnify
- *
- * Refactored to use modular components and NativeWind.
- */
-
 import { Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import React from 'react'
