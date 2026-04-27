@@ -9,15 +9,11 @@ import profileRoutes from "./routes/profileRoute";
 
 const app = express();
 
-// middleware
+
 app.use(cors());
 app.use(express.json());
 
-// test route
-app.get("/", (req, res) => {
-  res.send("API is running 🚀");
-});
-
+// All routes
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/enroll", enrollmentRoutes);
