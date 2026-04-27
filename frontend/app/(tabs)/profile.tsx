@@ -1,6 +1,7 @@
 
 
 import { Feather } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
 import React from 'react'
 import {
   Image,
@@ -14,6 +15,7 @@ import {
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
 
 export default function ProfileScreen() {
+  const router = useRouter()
   return (
     <View className="flex-1 bg-background">
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
@@ -56,7 +58,12 @@ export default function ProfileScreen() {
 
             {/* Quick Stats Dashboard (Integrated into header for cleaner look) */}
             <View className="w-full flex-row justify-between bg-background p-5 rounded-[24px] mt-8">
-              <StatColumn icon="book-open" value="14" label="Enrolled" />
+              <StatColumn 
+                icon="book-open" 
+                value="14" 
+                label="Enrolled" 
+                onPress={() => router.push('/my-courses')} 
+              />
               <View className="w-[1px] bg-black/5 mx-2" />
               <StatColumn icon="check-circle" value="4" label="Completed" />
               <View className="w-[1px] bg-black/5 mx-2" />
@@ -99,10 +106,24 @@ export default function ProfileScreen() {
           </Text>
           
           <View className="bg-white rounded-[24px] border border-black/5 shadow-sm overflow-hidden mb-8">
-            <MenuItem icon="user" label="Personal Information" delay={300} />
-            <MenuItem icon="credit-card" label="Payment Methods" delay={400} />
-            <MenuItem icon="award" label="My Certificates" delay={500} />
-            <MenuItem icon="bell" label="Notifications" delay={600} isLast />
+            <MenuItem 
+              icon="book" 
+              label="My Enrolled Courses" 
+              delay={300} 
+              onPress={() => router.push('/my-courses')} 
+            />
+            <MenuItem 
+              icon="bookmark" 
+              label="Saved Bookmarks" 
+              delay={400} 
+              onPress={() => router.push('/bookmarks')} 
+            />
+            <MenuItem 
+              icon="award" 
+              label="My Certificates" 
+              delay={500} 
+            />
+            <MenuItem icon="credit-card" label="Payment Methods" delay={600} isLast />
           </View>
 
           <Text className="text-[14px] font-bold text-foreground-muted uppercase tracking-widest mb-4 ml-2">
@@ -110,8 +131,10 @@ export default function ProfileScreen() {
           </Text>
 
           <View className="bg-white rounded-[24px] border border-black/5 shadow-sm overflow-hidden mb-10">
-            <MenuItem icon="shield" label="Privacy & Security" delay={700} />
-            <MenuItem icon="help-circle" label="Help & Support" delay={800} isLast />
+            <MenuItem icon="user" label="Personal Information" delay={700} />
+            <MenuItem icon="bell" label="Notifications" delay={800} />
+            <MenuItem icon="shield" label="Privacy & Security" delay={900} />
+            <MenuItem icon="help-circle" label="Help & Support" delay={1000} isLast />
           </View>
 
           {/* ── LOG OUT BUTTON ── */}
@@ -132,19 +155,25 @@ export default function ProfileScreen() {
 
 // ── HELPER COMPONENTS ──
 
-const StatColumn = ({ icon, value, label }: { icon: any, value: string, label: string }) => (
-  <View className="items-center flex-1">
+const StatColumn = ({ icon, value, label, onPress }: { icon: any, value: string, label: string, onPress?: () => void }) => (
+  <Pressable 
+    onPress={onPress}
+    className="items-center flex-1 active:opacity-60"
+  >
     <View className="w-10 h-10 rounded-full bg-white items-center justify-center mb-2 shadow-sm border border-black/5">
       <Feather name={icon} size={16} color="#229F92" />
     </View>
     <Text className="text-[18px] font-bold text-foreground-strong mb-0.5">{value}</Text>
     <Text className="text-[11px] font-medium text-foreground-subtle">{label}</Text>
-  </View>
+  </Pressable>
 )
 
-const MenuItem = ({ icon, label, delay, isLast = false }: { icon: any, label: string, delay: number, isLast?: boolean }) => (
+const MenuItem = ({ icon, label, delay, onPress, isLast = false }: { icon: any, label: string, delay: number, onPress?: () => void, isLast?: boolean }) => (
   <Animated.View entering={FadeInUp.delay(delay).duration(500)}>
-    <Pressable className={`flex-row items-center justify-between p-5 bg-white active:bg-background ${!isLast ? 'border-b border-black/5' : ''}`}>
+    <Pressable 
+      onPress={onPress}
+      className={`flex-row items-center justify-between p-5 bg-white active:bg-background ${!isLast ? 'border-b border-black/5' : ''}`}
+    >
       <View className="flex-row items-center gap-4">
         <View className="w-10 h-10 rounded-full bg-background items-center justify-center">
           <Feather name={icon} size={18} color="#1C3734" />

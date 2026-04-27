@@ -54,12 +54,27 @@ export const POPULAR_COURSES = [
 ];
 
 export const CONTINUE_COURSES = [
-  { id: "1", icon: "code", title: "Advanced React Patterns",
-    author: "By David Miller", progress: 0.65, color: C.primary, bg: C.primarySubtle },
-  { id: "2", icon: "layers", title: "UI Motion Design",
-    author: "By Maya Patel", progress: 0.40, color: "#9B8EC4", bg: "#EDE9F8" },
-  { id: "3", icon: "book-open", title: "Product Strategy",
-    author: "By James Chen", progress: 0.80, color: "#D97706", bg: C.cardYellow },
+  { 
+    id: "1", 
+    title: "Advanced React Patterns",
+    author: "By David Miller", 
+    progress: 0.65,
+    thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=200&auto=format&fit=crop"
+  },
+  { 
+    id: "2", 
+    title: "UI Motion Design",
+    author: "By Maya Patel", 
+    progress: 0.40,
+    thumbnail: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=200&auto=format&fit=crop"
+  },
+  { 
+    id: "3", 
+    title: "Product Strategy",
+    author: "By James Chen", 
+    progress: 0.80,
+    thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=200&auto=format&fit=crop"
+  },
 ];
 
 export const FEATURED = [
