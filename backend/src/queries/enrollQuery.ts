@@ -1,6 +1,6 @@
 import { db } from "../config/db";
-import { enrollments, courses } from "../models/schema";
-import { and, eq } from "drizzle-orm";
+import { enrollments, courses, instructors } from "../models/schema";
+import { and, eq, sql } from "drizzle-orm";
 
 
 export const enrollCourse = async (userId: string, courseId: string) => {
@@ -50,12 +50,15 @@ export const updateProgress = async (
 export const getMyCourses = async (userId: string) => {
   return db
     .select({
-      id: courses.id,
-      title: courses.title,
-      thumbnail: courses.thumbnail,
-      progress: enrollments.progress,
+      id: enrollments.id,
+      course_id: courses.id,
+      course_title: courses.title,
+      course_thumbnail: courses.thumbnail,
+      course_author: instructors.name,
+      progress: sql<number>`${enrollments.progress}::float / 100`,
     })
     .from(enrollments)
     .leftJoin(courses, eq(enrollments.courseId, courses.id))
+    .leftJoin(instructors, eq(courses.instructorId, instructors.id))
     .where(eq(enrollments.userId, userId));
 };

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../middleware/auth.middleware";
-import { enroll, myCourses, progress } from "../controllers/enrollContoller";
+import { enroll, myCourses, progress } from "../controllers/enrollController";
 import { validate } from "../middleware/validate.middleware";
 import { enrollSchema, progressSchema } from "../validators/enroll.validator";
 

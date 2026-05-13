@@ -52,6 +52,7 @@ export const registerUser = async (data: RegisterInput) => {
       id: newUser.id,
       name: newUser.name,
       email: newUser.email,
+
     },
   };
 };
@@ -91,6 +92,7 @@ export const loginUser = async (data: LoginInput) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      avatar: user.avatar
     },
   };
 };

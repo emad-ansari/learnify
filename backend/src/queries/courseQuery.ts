@@ -4,26 +4,34 @@ import { eq, ilike, and, desc } from "drizzle-orm";
 
 export const getAllCourses = async (query: any) => {
   const { category, search } = query;
+  console.log("getAllCourses - RAW query params:", query);
 
   const conditions = [];
 
-  if (category) {
+  if (category && category !== "All") {
+    console.log("Applying category filter:", category);
     conditions.push(eq(courses.category, category));
   }
 
-  if (search) {
+  if (search && search.trim() !== "") {
+    console.log("Applying search filter:", search);
     conditions.push(ilike(courses.title, `%${search}%`));
   }
-
 
   let queryBuilder = db
     .select({
       id: courses.id,
       title: courses.title,
+      description: courses.description,
       thumbnail: courses.thumbnail,
       price: courses.price,
-      averageRating: courses.averageRating,
+      rating: courses.averageRating,
+      reviews_count: courses.totalReviews,
+      lessons_count: courses.totalLessons,
+      duration: courses.duration,
+      category: courses.category,
       instructor: instructors.name,
+      instructor_image: instructors.avatar,
     })
     .from(courses)
     .leftJoin(instructors, eq(courses.instructorId, instructors.id))
@@ -33,7 +41,9 @@ export const getAllCourses = async (query: any) => {
     queryBuilder = queryBuilder.where(and(...conditions));
   }
 
-  return queryBuilder;
+  const results = await queryBuilder;
+  console.log(`getAllCourses - Found ${results.length} courses`);
+  return results;
 };
 
 export const getCourseById = async (id: string) => {
@@ -42,14 +52,15 @@ export const getCourseById = async (id: string) => {
       id: courses.id,
       title: courses.title,
       description: courses.description,
+      thumbnail: courses.thumbnail,
       price: courses.price,
+      rating: courses.averageRating,
+      reviews_count: courses.totalReviews,
+      lessons_count: courses.totalLessons,
       duration: courses.duration,
-      totalLessons: courses.totalLessons,
-      averageRating: courses.averageRating,
-      totalReviews: courses.totalReviews,
-      studentsCount: courses.studentsCount,
+      category: courses.category,
       instructor: instructors.name,
-      instructorAvatar: instructors.avatar,
+      instructor_image: instructors.avatar,
     })
     .from(courses)
     .leftJoin(instructors, eq(courses.instructorId, instructors.id))
@@ -60,16 +71,44 @@ export const getCourseById = async (id: string) => {
 
 export const getFeaturedCourses = async () => {
   return db
-    .select()
+    .select({
+      id: courses.id,
+      title: courses.title,
+      description: courses.description,
+      thumbnail: courses.thumbnail,
+      price: courses.price,
+      rating: courses.averageRating,
+      reviews_count: courses.totalReviews,
+      lessons_count: courses.totalLessons,
+      duration: courses.duration,
+      category: courses.category,
+      instructor: instructors.name,
+      instructor_image: instructors.avatar,
+    })
     .from(courses)
+    .leftJoin(instructors, eq(courses.instructorId, instructors.id))
     .orderBy(desc(courses.averageRating))
     .limit(5);
 };
 
 export const getPopularCourses = async () => {
   return db
-    .select()
+    .select({
+      id: courses.id,
+      title: courses.title,
+      description: courses.description,
+      thumbnail: courses.thumbnail,
+      price: courses.price,
+      rating: courses.averageRating,
+      reviews_count: courses.totalReviews,
+      lessons_count: courses.totalLessons,
+      duration: courses.duration,
+      category: courses.category,
+      instructor: instructors.name,
+      instructor_image: instructors.avatar,
+    })
     .from(courses)
+    .leftJoin(instructors, eq(courses.instructorId, instructors.id))
     .orderBy(desc(courses.studentsCount))
     .limit(5);
 };

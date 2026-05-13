@@ -4,7 +4,7 @@ import { registerUser, loginUser } from "../queries/authQuery";
 export const register = async (req: Request, res: Response) => {
   try {
     const data = await registerUser(req.body);
-
+    
     // never send password
     res.status(201).json({
       success: true,
@@ -21,6 +21,7 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const data = await loginUser(req.body);
+    console.log("data: ", data);
 
     res.status(200).json({
       success: true,

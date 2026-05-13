@@ -20,17 +20,27 @@ export const enroll = async (req: AuthRequest, res: Response) => {
 };
 
 export const myCourses = async (req: AuthRequest, res: Response) => {
-  const userId = req.user!.userId;
-  const data = await getMyCourses(userId);
+  try {
+    const userId = req.user!.userId;
+    const data = await getMyCourses(userId);
 
-  res.json({ success: true, data });
+    res.json({ success: true, data });
+  } catch (e: any) {
+    console.error("Error in myCourses:", e);
+    res.status(500).json({ success: false, message: e.message });
+  }
 };
 
 export const progress = async (req: AuthRequest, res: Response) => {
-  const userId = req.user!.userId;
-  const { courseId, progress } = req.body;
+  try {
+    const userId = req.user!.userId;
+    const { courseId, progress: progressValue } = req.body;
 
-  const data = await updateProgress(userId, courseId, progress);
+    const data = await updateProgress(userId, courseId, progressValue);
 
-  res.json({ success: true, data });
+    res.json({ success: true, data });
+  } catch (e: any) {
+    console.error("Error in progress:", e);
+    res.status(500).json({ success: false, message: e.message });
+  }
 };

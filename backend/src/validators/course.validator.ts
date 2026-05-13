@@ -11,4 +11,7 @@ export const courseIdSchema = z.object({
   params: z.object({
     id: z.string().uuid("Invalid course ID format"),
   }),
+  
+  query: z.object({}).optional(),
+  body: z.unknown().optional(),
 });

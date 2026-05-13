@@ -1,20 +1,27 @@
 import { Request, Response, NextFunction } from "express";
-import { ZodType , ZodError } from "zod";
+import { ZodType, ZodError } from "zod";
 
 export const validate =
   (schema: ZodType<any, any, any>) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log("request comes inside validate");
       const parsed = await schema.parseAsync({
         body: req.body,
         query: req.query,
         params: req.params,
       });
+      console.log("request comes inside validate 2");
+
       req.body = parsed.body;
-      req.query = parsed.query;
-      req.params = parsed.params;
+      Object.assign(req.query, parsed.query);
+      Object.assign(req.params, parsed.params);
+      console.log("request comes inside validate 3");
+
       return next();
     } catch (error) {
+      console.log("error: ", error);
+
       if (error instanceof ZodError) {
         return res.status(400).json({
           success: false,

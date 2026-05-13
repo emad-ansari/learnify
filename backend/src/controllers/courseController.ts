@@ -5,24 +5,48 @@ import {
   getFeaturedCourses,
   getPopularCourses,
 } from "../queries/courseQuery";
+import { ConsoleLogWriter } from "drizzle-orm";
 
 export const fetchCourses = async (req: Request, res: Response) => {
-  const data = await getAllCourses(req.query);
-  res.json({ success: true, data });
+  try {
+    console.log("request comes inside controller");
+    const data = await getAllCourses(req.query);
+    res.json({ success: true, data });
+  } catch (e: any) {
+    console.error("Error in fetchCourses:", e);
+    res.status(500).json({ success: false, message: e.message });
+  }
 };
 
 export const fetchCourseDetails = async (req: Request, res: Response) => {
-  const courseId = req.params.id as string;
-  const data = await getCourseById(courseId);
-  res.json({ success: true, data });
+  try {
+    const { id } = req.params;
+    const data = await getCourseById(id as string);
+    res.json({ success: true, data });
+  } catch (e: any) {
+    console.error("Error in fetchCourseDetails:", e);
+    res.status(500).json({ success: false, message: e.message });
+  }
 };
 
 export const fetchFeatured = async (_: Request, res: Response) => {
-  const data = await getFeaturedCourses();
-  res.json({ success: true, data });
+  try {
+    console.log("request comes inside controller");
+    const data = await getFeaturedCourses();
+    res.json({ success: true, data });
+  } catch (e: any) {
+    console.error("Error in fetchFeatured:", e);
+    res.status(500).json({ success: false, message: e.message });
+  }
 };
 
 export const fetchPopular = async (_: Request, res: Response) => {
-  const data = await getPopularCourses();
-  res.json({ success: true, data });
+  try {
+    console.log("request comes inside controller");
+    const data = await getPopularCourses();
+    res.json({ success: true, data });
+  } catch (e: any) {
+    console.error("Error in fetchPopular:", e);
+    res.status(500).json({ success: false, message: e.message });
+  }
 };
