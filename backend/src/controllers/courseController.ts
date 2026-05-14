@@ -5,7 +5,6 @@ import {
   getFeaturedCourses,
   getPopularCourses,
 } from "../queries/courseQuery";
-import { ConsoleLogWriter } from "drizzle-orm";
 
 export const fetchCourses = async (req: Request, res: Response) => {
   try {
