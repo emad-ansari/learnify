@@ -1,19 +1,21 @@
 import { Feather, FontAwesome6 } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import React from 'react'
-import { Image, Pressable, Text, View } from 'react-native'
+import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { C } from '../constants/theme'
+import * as Haptics from 'expo-haptics'
+import useBookmarkStore from '../store/useBookmarkStore'
+import useEnrollmentStore from '../store/useEnrollmentStore'
+import { Course } from '../store/useCourseStore'
 
 export interface CourseCardProps {
   category: string
   title: string
   instructor: string
-  instructorAvatar?: string
+  instructor_image?: string
   thumbnail: string
   rating: number
-  reviews: string
-  price: string
+  price: number
   description?: string
   width?: number
   delay?: number
@@ -30,17 +32,40 @@ export const CourseCard: React.FC<CourseCardProps & { id?: string }> = ({
   width,
   delay = 0,
 }) => {
-  const router = useRouter();
+  const router = useRouter()
+  const { toggleBookmark, isBookmarked } = useBookmarkStore()
+  const { enroll, isEnrolled } = useEnrollmentStore()
+  
+  const bookmarked = id ? isBookmarked(id) : false
+  const enrolled = id ? isEnrolled(id) : false
 
+  const handleBookmark = () => {
+    if (id) {
+      toggleBookmark({ id, title, instructor, thumbnail, rating, price, description } as Course)
+    }
+  }
+
+  const handleEnroll = async () => {
+    if (id && !enrolled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+      await enroll(id)
+    } else if (enrolled) {
+      router.push('/my-courses')
+    }
+  }
   return (
-    <Animated.View
-      entering={FadeInDown.delay(delay).duration(600)}
+    <View
+      // entering={FadeInDown.delay(delay).duration(600)}
       className="m-2 rounded-[30px] bg-white shadow-sm border border-black/5 overflow-hidden"
-      style={[{ elevation: 4, width: width }]}
+      style={[{ elevation: 4, width: width || '100%' }]}
     >
-      <Pressable 
-        className="flex-1"
-        onPress={() => router.push({ pathname: '/course-details', params: { id: id || title } })}
+      <Pressable
+        onPress={() =>
+          router.push({
+            pathname: '/course-details',
+            params: { id: id || title },
+          })
+        }
       >
         {/* Thumbnail Area */}
         <View className="relative h-[170px] w-full">
@@ -50,12 +75,18 @@ export const CourseCard: React.FC<CourseCardProps & { id?: string }> = ({
             resizeMode="cover"
           />
           {/* Bookmark Button Overlay */}
-          <Pressable
+          <TouchableOpacity
+            onPress={handleBookmark}
             className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/40 items-center justify-center"
             style={{ borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' }}
           >
-            <Feather name="bookmark" size={20} color="white" />
-          </Pressable>
+            <FontAwesome6 
+              name="bookmark" 
+              size={18} 
+              color={bookmarked ? "#229F92" : "white"} 
+              solid={bookmarked} 
+            />
+          </TouchableOpacity>
         </View>
 
         {/* Content Area */}
@@ -93,16 +124,25 @@ export const CourseCard: React.FC<CourseCardProps & { id?: string }> = ({
 
           {/* Footer Row */}
           <View className="flex-row justify-between items-center mt-auto">
-             <View>
-               <Text className="text-[10px] font-bold text-foreground-subtle uppercase tracking-widest mb-1">Price</Text>
-               <Text className="text-[18px] font-bold text-primary">{price}</Text>
+            <View>
+              <Text className="text-[10px] font-bold text-foreground-subtle uppercase tracking-widest mb-1">
+                Price
+              </Text>
+              <Text className="text-[18px] font-bold text-primary">
+                {price}
+              </Text>
             </View>
-            <Pressable className="bg-primary px-5 py-2.5 rounded-full">
-              <Text className="text-white text-[12px] font-bold">Enroll</Text>
-            </Pressable>
+            <TouchableOpacity 
+              onPress={handleEnroll}
+              className={`${enrolled ? 'bg-gray-200' : 'bg-primary'} px-5 py-2.5 rounded-full`}
+            >
+              <Text className={`${enrolled ? 'text-gray-500' : 'text-white'} text-[12px] font-bold`}>
+                {enrolled ? 'In My Learning' : 'Enroll'}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Pressable>
-    </Animated.View>
+    </View>
   )
 }

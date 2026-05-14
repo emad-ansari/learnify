@@ -1,12 +1,11 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
-import { PlatformPressable } from '@react-navigation/elements'
-import { useLinkBuilder } from '@react-navigation/native'
 import { useEffect, useRef, useState } from 'react'
 import {
   Animated,
   LayoutChangeEvent,
   Text,
   View,
+  Pressable,
 } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import { C } from '../constants/theme'
@@ -16,7 +15,6 @@ export default function TabBar({
   descriptors,
   navigation,
 }: BottomTabBarProps) {
-  const { buildHref } = useLinkBuilder()
   const [tabBarWidth, setTabBarWidth] = useState(0)
   const translateX = useRef(new Animated.Value(0)).current
 
@@ -107,9 +105,8 @@ export default function TabBar({
           if (route.name === 'profile') iconName = 'user'
 
           return (
-            <PlatformPressable
+            <Pressable
               key={route.key}
-              href={buildHref(route.name, route.params)}
               accessibilityState={isFocused ? { selected: true } : {}}
               onPress={onPress}
               className="relative flex-1 items-center justify-center rounded-full py-3"
@@ -118,16 +115,16 @@ export default function TabBar({
               
               <Text
                 style={{ 
-                  fontSize: 10, 
-                  fontFamily: isFocused ? 'Poppins_600SemiBold' : 'Poppins_500Medium',
-                  marginTop: 3,
-                  color: iconColor,
-                  letterSpacing: 0.3
+                   fontSize: 10, 
+                   fontFamily: isFocused ? 'Poppins_600SemiBold' : 'Poppins_500Medium',
+                   marginTop: 3,
+                   color: iconColor,
+                   letterSpacing: 0.3
                 }}
               >
                 {label}
               </Text>
-            </PlatformPressable>
+            </Pressable>
           )
         })}
       </View>

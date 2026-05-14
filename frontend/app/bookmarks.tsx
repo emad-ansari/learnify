@@ -8,17 +8,19 @@ import {
   Pressable,
   StatusBar,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-
-import { POPULAR_COURSES } from '../constants/data'
+import useBookmarkStore from '../store/useBookmarkStore'
 
 export default function BookmarksScreen() {
   const router = useRouter()
+  const { bookmarks, fetchBookmarks, isLoading } = useBookmarkStore()
 
-  // For now, we'll just show the first 3 courses as bookmarked
-  const bookmarkedCourses = POPULAR_COURSES.slice(0, 3)
+  React.useEffect(() => {
+    fetchBookmarks()
+  }, [])
 
   return (
     <View className="flex-1 bg-background">
@@ -42,7 +44,7 @@ export default function BookmarksScreen() {
       </View>
 
       <FlatList
-        data={bookmarkedCourses}
+        data={bookmarks}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
@@ -72,19 +74,25 @@ export default function BookmarksScreen() {
               
               <View className="flex-1">
                 <View className="flex-row items-center justify-between mb-1">
-                  <Text className="text-[11px] font-bold text-primary uppercase tracking-widest">{item.category}</Text>
-                  <FontAwesome6 name="bookmark" size={14} color="#229F92" solid />
+                  <Text className="text-[11px] font-bold text-primary uppercase tracking-widest">
+                    Course
+                  </Text>
+                  <TouchableOpacity 
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      useBookmarkStore.getState().removeBookmark(item.id);
+                    }}
+                  >
+                    <FontAwesome6 name="bookmark" size={14} color="#229F92" solid />
+                  </TouchableOpacity>
                 </View>
                 <Text className="text-[15px] font-bold text-foreground-strong mb-1" numberOfLines={1}>
                   {item.title}
                 </Text>
                 <View className="flex-row items-center gap-2">
-                  <View className="flex-row items-center gap-1">
-                    <FontAwesome6 name="star" size={10} color="#F59E0B" solid />
-                    <Text className="text-[12px] font-bold text-amber-500">{item.rating}</Text>
-                  </View>
-                  <View className="w-1 h-1 rounded-full bg-black/10" />
-                  <Text className="text-[12px] font-medium text-foreground-muted">{item.instructor}</Text>
+                  <Text className="text-[14px] font-bold text-primary">
+                    ${item.price}
+                  </Text>
                 </View>
               </View>
             </Pressable>

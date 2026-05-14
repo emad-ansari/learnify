@@ -7,7 +7,7 @@
 import { create } from 'zustand';
 import { apiFetch } from '../api/apiConfig';
 
-interface Course {
+export interface Course {
   id: string;
   title: string;
   description: string;
@@ -66,6 +66,7 @@ const useCourseStore = create<CourseState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await apiFetch('/courses/featured');
+      console.log('featured courses: ', response.data);
       set({ featuredCourses: response.data, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });

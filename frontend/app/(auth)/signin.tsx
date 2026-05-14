@@ -1,30 +1,12 @@
-/**
- * SignupScreen.tsx — Learnify
- *
- * Stack: Expo + NativeWind v4 + React Native Reanimated v3
- *
- * Animations used:
- *  1. Hero image   — slides + fades in from above (FadeInDown)
- *  2. Form card    — springs up from below (FadeInUp with spring)
- *  3. Badge        — scale-bounces in after card (ZoomIn)
- *  4. Each field   — staggered fade-in left-to-right (FadeInLeft)
- *  5. Button       — pulse scale loop while idle (withRepeat)
- *  6. Input focus  — border color animates via useAnimatedStyle
- *  7. Button press — scale-down spring on press (useSharedValue)
- *
- * Dependencies to install (if not already):
- *   npx expo install react-native-reanimated
- *   npx expo install expo-linear-gradient
- *   npx expo install @expo-google-fonts/poppins expo-font
- *   npm install nativewind   (v4)
- *   npm install react-native-svg   (for inline SVG icons)
- */
-
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import React, { useCallback, useState } from 'react'
+import Toast from 'react-native-toast-message'
+import { API_BASE_URL, apiFetch } from '@/api/apiConfig'
+import useAuthStore from '@/store/useAuthStore'
 import {
+  ActivityIndicator,
   Image,
   Pressable,
   StatusBar,
@@ -38,10 +20,6 @@ import Animated, {
   FadeInDown,
   FadeInLeft,
   FadeInUp,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
   ZoomIn,
 } from 'react-native-reanimated'
 
@@ -49,42 +27,59 @@ import Animated, {
 export default function SigninScreen() {
   const router = useRouter()
 
-  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  // Button press animation
-  const btnScale = useSharedValue(1)
-
-  // Subtle idle pulse on button (starts after mount)
-  React.useEffect(() => {
-    btnScale.value = withRepeat(
-      withSequence(
-        withTiming(1.03, { duration: 900 }),
-        withTiming(1.0, { duration: 900 }),
-      ),
-      -1, // infinite
-      true,
-    )
-  }, [])
-
   // Simple validation
   const validate = useCallback(() => {
     const e: Record<string, string> = {}
-    if (!username.trim()) e.username = 'Name is required'
     if (!email.includes('@')) e.email = 'Enter a valid email'
     if (password.length < 6) e.password = 'Min 6 characters'
     setErrors(e)
     return Object.keys(e).length === 0
-  }, [username, email, password])
+  }, [email, password])
 
-  const handleSignup = () => {
+  const setAuth = useAuthStore((state) => state.setAuth)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSignin = async () => {
     if (validate()) {
-      // TODO: wire to your auth logic
-      console.log('Sign up →', { username, email })
+      setIsLoading(true)
+      setErrors({})
+      try {
+        const response = await apiFetch('/auth/login', {
+          method: 'POST',
+          body: { email, password },
+        })
+        
+        setAuth(response.data.user, response.data.token)
+        Toast.show({
+          type: 'success',
+          text1: 'Welcome Back!',
+          text2: `Signed in as ${response.data.user.name}`,
+        })
+        router.replace('/(tabs)')
+      } catch (error: any) {
+        setErrors({ general: error.message || 'Login failed' })
+        Toast.show({
+          type: 'error',
+          text1: 'Login Failed',
+          text2: error.message || 'Please check your credentials',
+        })
+      } finally {
+        setIsLoading(false)
+      }
     }
   }
+
+  const handleFocus = useCallback(() => {
+    setErrors({})
+  }, [])
+
+  const handleBlur = useCallback(() => {
+    validate()
+  }, [])
 
   return (
     <KeyboardAwareScrollView
@@ -152,6 +147,12 @@ export default function SigninScreen() {
             Welcome Back! Sign in to your account
           </Animated.Text>
 
+          {errors && (
+            <Text className="text-red-500 text-xs text-center mb-4">
+              {errors.general}
+            </Text>
+          )}
+
           {/* Email Field */}
           <View className="mb-5">
             <Text className="text-secondary-light font-medium text-sm mb-1.5">
@@ -166,12 +167,18 @@ export default function SigninScreen() {
                 placeholderTextColor="#92A5A3"
                 keyboardType="email-address"
                 autoCapitalize="none"
-                // onFocus={handleFocus}
-                // onBlur={handleBlur}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 className="ml-2 flex-1 text-secondary-light"
               />
             </View>
+            {errors.email && (
+              <Text className="text-red-500 text-xs text-left mt-1">
+                {errors.email}
+              </Text>
+            )}
           </View>
+
           {/* Password Field */}
           <View className="mb-5">
             <Text className="text-secondary-light font-medium text-sm mb-1.5">
@@ -185,11 +192,16 @@ export default function SigninScreen() {
                 placeholder="••••••••••"
                 placeholderTextColor="#92A5A3"
                 secureTextEntry
-                // onFocus={handleFocus}
-                // onBlur={handleBlur}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 className="ml-2 flex-1 text-secondary-light"
               />
             </View>
+            {errors.password && (
+              <Text className="text-red-500 text-xs  mt-1">
+                {errors.password}
+              </Text>
+            )}
           </View>
 
           {/* Sign Up button */}
@@ -198,12 +210,14 @@ export default function SigninScreen() {
             className="mt-2"
           >
             <TouchableOpacity
-              onPress={handleSignup}
+              onPress={handleSignin}
+              disabled={isLoading}
               activeOpacity={0.7}
-              className="bg-primary rounded-btn py-4 items-center shadow-lg shadow-primary elevation-8"
+              className={`bg-primary rounded-btn flex-row justify-center gap-2 py-4 items-center shadow-lg shadow-primary elevation-8 ${isLoading ? 'opacity-70' : ''}`}
             >
-              <Text className="text-white text-base font-bold tracking-[0.3px]">
-                Sign In
+              {isLoading && <ActivityIndicator size="small" color="#fff" />}
+              <Text className="text-secondary text-lg font-bold">
+                {isLoading ? 'Signin in...' : 'Signin'}
               </Text>
             </TouchableOpacity>
           </Animated.View>

@@ -11,11 +11,15 @@ import {
   View,
 } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-
-import { CONTINUE_COURSES } from '../constants/data'
+import useEnrollmentStore from '../store/useEnrollmentStore'
 
 export default function MyCoursesScreen() {
   const router = useRouter()
+  const { myCourses, fetchMyCourses, isLoading } = useEnrollmentStore()
+
+  React.useEffect(() => {
+    fetchMyCourses()
+  }, [])
 
   return (
     <View className="flex-1 bg-background">
@@ -39,14 +43,18 @@ export default function MyCoursesScreen() {
       </View>
 
       <FlatList
-        data={CONTINUE_COURSES}
+        data={myCourses}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <View className="mb-6">
             <Text className="text-[22px] font-bold text-foreground-strong">Keep Learning</Text>
-            <Text className="text-[14px] text-foreground-muted mt-1">  {`You have ${CONTINUE_COURSES.length} courses in progress`}</Text>
+            <Text className="text-[14px] text-foreground-muted mt-1">
+              {myCourses.length === 0 
+                ? "You haven't enrolled in any courses yet." 
+                : `You have ${myCourses.length} courses in progress`}
+            </Text>
           </View>
         }
         renderItem={({ item, index }) => (
@@ -60,14 +68,14 @@ export default function MyCoursesScreen() {
               <View className="flex-row items-center gap-4 mb-4">
                 <View className="w-14 h-14 rounded-2xl overflow-hidden bg-gray-100">
                   <Image 
-                    source={{ uri: item.thumbnail }} 
+                    source={{ uri: item.course_thumbnail }} 
                     className="w-full h-full"
                     resizeMode="cover"
                   />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-[16px] font-bold text-foreground-strong mb-0.5">{item.title}</Text>
-                  <Text className="text-[12px] font-medium text-foreground-muted">{item.author}</Text>
+                  <Text className="text-[16px] font-bold text-foreground-strong mb-0.5">{item.course_title}</Text>
+                  <Text className="text-[12px] font-medium text-foreground-muted">{item.course_author}</Text>
                 </View>
               </View>
 

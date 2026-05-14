@@ -1,18 +1,14 @@
-/**
- * useEnrollmentStore.ts — Learnify
- * 
- * Zustand store for enrollment and progress state management.
- */
-
 import { create } from 'zustand';
+import Toast from 'react-native-toast-message';
 import { apiFetch } from '../api/apiConfig';
 
-interface EnrolledCourse {
+export interface EnrolledCourse {
   id: string;
   course_id: string;
   course_title: string;
   course_thumbnail: string;
   progress: number;
+  course_author: string;
 }
 
 interface EnrollmentState {
@@ -51,8 +47,18 @@ const useEnrollmentStore = create<EnrollmentState>((set, get) => ({
       // Re-fetch to update the list
       const response = await apiFetch('/enroll/my-courses');
       set({ myCourses: response.data, isLoading: false });
+      Toast.show({
+        type: 'success',
+        text1: 'Enrolled Successfully!',
+        text2: 'The course has been added to your learning list.',
+      });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
+      Toast.show({
+        type: 'error',
+        text1: 'Enrollment Failed',
+        text2: error.message,
+      });
       throw error; // Re-throw to handle in UI if needed
     }
   },

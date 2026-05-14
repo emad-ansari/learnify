@@ -1,8 +1,7 @@
 import { Feather, FontAwesome6 } from '@expo/vector-icons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import React, { useState } from 'react'
+import React from 'react'
 import {
-  Dimensions,
   Image,
   Platform,
   Pressable,
@@ -12,27 +11,59 @@ import {
   View,
 } from 'react-native'
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
-
-import { POPULAR_COURSES } from '../constants/data'
-
-const { width: SW } = Dimensions.get('window')
+import * as Haptics from 'expo-haptics'
+import useCourseStore from '../store/useCourseStore'
+import useBookmarkStore from '../store/useBookmarkStore'
+import useEnrollmentStore from '../store/useEnrollmentStore'
 
 export default function CourseDetailsScreen() {
   const router = useRouter()
-  const params = useLocalSearchParams()
-  const { id } = params
+  const { id } = useLocalSearchParams<{ id: string }>()
 
-  // Mock fetching the course details. In a real app, this would be an API call or full context.
-  // We fall back to the first popular course if not found.
-  const course = POPULAR_COURSES.find((c) => c.id === id) || POPULAR_COURSES[0]
+  const { currentCourse: course, fetchCourseDetails, isLoading } = useCourseStore()
+  const { isBookmarked, addBookmark, removeBookmark, fetchBookmarks } = useBookmarkStore()
+  const { isEnrolled, enroll, fetchMyCourses } = useEnrollmentStore()
 
-  // Local state for bookmark toggle
-  const [isBookmarked, setIsBookmarked] = useState(false)
+  React.useEffect(() => {
+    if (id) {
+      fetchCourseDetails(id)
+      fetchBookmarks()
+      fetchMyCourses()
+    }
+  }, [id])
 
-  const toggleBookmark = () => {
-    setIsBookmarked(!isBookmarked)
-    // Here you would connect to AsyncStorage or a global store:
-    // AsyncStorage.setItem(`bookmark_${course.id}`, JSON.stringify(!isBookmarked))
+  const bookmarked = id ? isBookmarked(id) : false
+  const enrolled = id ? isEnrolled(id) : false
+
+  const toggleBookmark = async () => {
+    if (!id) return
+    if (bookmarked) {
+      await removeBookmark(id)
+    } else {
+      await addBookmark(id)
+    }
+  }
+
+  const handleEnroll = async () => {
+    if (!id) return
+    if (enrolled) {
+      router.push('/my-courses')
+      return
+    }
+    try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+      await enroll(id)
+    } catch (err) {
+      // Error handled by store toast
+    }
+  }
+
+  if (isLoading || !course) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white">
+        <Text className="text-secondary">Loading course details...</Text>
+      </View>
+    )
   }
 
   return (
@@ -75,14 +106,14 @@ export default function CourseDetailsScreen() {
             <Pressable
               onPress={toggleBookmark}
               className={`w-11 h-11 rounded-full items-center justify-center backdrop-blur-md border border-white/20 ${
-                isBookmarked ? 'bg-primary' : 'bg-black/30'
+                bookmarked ? 'bg-primary' : 'bg-black/30'
               }`}
             >
               <FontAwesome6
                 name="bookmark"
                 size={18}
                 color="white"
-                solid={isBookmarked}
+                solid={bookmarked}
               />
             </Pressable>
           </View>
@@ -110,9 +141,9 @@ export default function CourseDetailsScreen() {
           <View className="flex-row items-center justify-between mb-8 pb-6 border-b border-black/5">
             <View className="flex-row items-center gap-3">
               <View className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 border border-black/5">
-                {course.instructorAvatar ? (
+                {course.instructor_image ? (
                   <Image
-                    source={{ uri: course.instructorAvatar }}
+                    source={{ uri: course.instructor_image }}
                     className="w-full h-full"
                   />
                 ) : (
@@ -140,7 +171,7 @@ export default function CourseDetailsScreen() {
                 </Text>
               </View>
               <Text className="text-[11px] font-medium text-foreground-subtle">
-                {course.reviews} Reviews
+                {course.reviews_count} Reviews
               </Text>
             </View>
           </View>
@@ -198,8 +229,13 @@ export default function CourseDetailsScreen() {
               {course.price}
             </Text>
           </View>
-          <Pressable className="bg-primary px-10 h-[56px] rounded-full items-center justify-center shadow-lg shadow-primary/30">
-            <Text className="text-white text-[16px] font-bold">Enroll Now</Text>
+          <Pressable 
+            onPress={handleEnroll}
+            className={`px-10 h-[56px] rounded-full items-center justify-center shadow-lg ${enrolled ? 'bg-gray-100 border border-gray-200' : 'bg-primary shadow-primary/30'}`}
+          >
+            <Text className={`${enrolled ? 'text-gray-500' : 'text-white'} text-[16px] font-bold`}>
+              {enrolled ? 'Go to Course' : 'Enroll Now'}
+            </Text>
           </Pressable>
         </View>
       </Animated.View>

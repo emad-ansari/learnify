@@ -1,24 +1,33 @@
-import React from "react";
-import { Dimensions, Pressable, Text, View } from "react-native";
-import Animated, { FadeInRight, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
-import { Feather } from "@expo/vector-icons";
-import { ProgressBar } from "./ProgressBar";
+import React from 'react'
+import { Dimensions, Image, Pressable, Text, View } from 'react-native'
+import { EnrolledCourse } from '@/store/useEnrollmentStore'
+import Animated, {
+  FadeInRight,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
+import { ProgressBar } from './ProgressBar'
 
-const { width: SW } = Dimensions.get("window");
+const { width: SW } = Dimensions.get('window')
 
-interface ContinueCardProps {
-  icon: string;
-  title: string;
-  author: string;
-  progress: number;
-  color: string;
-  bg: string;
-  delay?: number;
+type ContinueCardProps = Omit<EnrolledCourse, 'id' | 'course_id'> & {
+  delay?: number
 }
 
-export const ContinueCard: React.FC<ContinueCardProps> = ({ icon, title, author, progress, color, bg, delay = 0 }) => {
-  const scale = useSharedValue(1);
-  const cardStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+export const ContinueCard: React.FC<ContinueCardProps> = ({
+  course_title,
+  course_author,
+  progress,
+  delay = 0,
+  course_thumbnail,
+}) => {
+  const scale = useSharedValue(1)
+  const cardStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }))
+
+  console.log('course_thumbnail', course_thumbnail)
 
   return (
     <Animated.View
@@ -27,35 +36,48 @@ export const ContinueCard: React.FC<ContinueCardProps> = ({ icon, title, author,
       style={[{ width: SW * 0.78, elevation: 4 }, cardStyle]}
     >
       <Pressable
-        onPressIn={() => { scale.value = withSpring(0.97, { damping: 12 }); }}
-        onPressOut={() => { scale.value = withSpring(1, { damping: 12 }); }}
+        onPressIn={() => {
+          scale.value = withSpring(0.97, { damping: 12 })
+        }}
+        onPressOut={() => {
+          scale.value = withSpring(1, { damping: 12 })
+        }}
         className="flex-row items-center flex-1"
       >
         {/* Icon bubble */}
-        <View 
-          className="w-[50px] h-[50px] rounded-[16px] items-center justify-center mr-3.5"
-          style={{ backgroundColor: bg }}
-        >
-          <Feather name={icon as any} color={color} size={22} />
+        <View className="w-[50px] h-[50px] rounded-[16px] items-center justify-center mr-3.5">
+          <Image
+            source={{ uri: course_thumbnail }}
+            className="w-full h-full rounded-[16px]"
+          />
         </View>
 
         <View className="flex-1">
-          <Text className="text-[14px] font-semibold text-foreground-strong mb-0.5" numberOfLines={1}>
-            {title}
+          <Text
+            className="text-[14px] font-semibold text-foreground-strong mb-0.5"
+            numberOfLines={1}
+          >
+            {course_title}
           </Text>
           <Text className="text-[11px] font-normal text-foreground-muted mb-1">
-            {author}
+            {course_author}
           </Text>
           <View className="flex-row items-center gap-2">
             <View className="flex-1">
-              <ProgressBar progress={progress} color={color} delay={delay + 300} />
+              <ProgressBar
+                progress={progress}
+                color="#229F92"
+                delay={delay + 300}
+              />
             </View>
-            <Text className="text-[11px] font-semibold" style={{ color: color }}>
+            <Text
+              className="text-[11px] font-semibold text-primary"
+            >
               {Math.round(progress * 100)}%
             </Text>
           </View>
         </View>
       </Pressable>
     </Animated.View>
-  );
-};
+  )
+}

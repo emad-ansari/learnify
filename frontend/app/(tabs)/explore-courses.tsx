@@ -1,114 +1,95 @@
 import { Feather } from '@expo/vector-icons'
-import React, { useState } from 'react'
-import {
-  Platform,
-  Pressable,
-  ScrollView,
-  StatusBar,
-  Text,
-  TextInput,
-  View,
-} from 'react-native'
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
+import React, { useState, useEffect, memo, useCallback } from 'react'
+import { useDebounce } from 'use-debounce'
+import { FlatList, RefreshControl, StatusBar, View } from 'react-native'
 
-// Components
-import { CategoryFilter } from '../../components/CategoryFilter'
-import { CourseCard } from '../../components/CourseCard'
+import { CourseCard } from '@/components/CourseCard'
+import useCourseStore, { Course } from '@/store/useCourseStore'
+import ExploreHeader from '@/components/ExploreHeader'
 
-// Constants
-import { POPULAR_COURSES } from '../../constants/data'
+const CourseItem = memo(({ item, index }: { item: Course; index: number }) => (
+  <View className="px-4">
+    <CourseCard {...item} delay={index < 6 ? 100 + 50 * index : 0} />
+  </View>
+))
 
 export default function ExploreCoursesScreen() {
   const [search, setSearch] = useState('')
+  const [category, setCategory] = useState('All')
+  const [refreshing, setRefreshing] = useState(false)
+  const { courses, fetchCourses, isLoading } = useCourseStore()
+
+  const [debouncedSearch] = useDebounce(search, 500)
+
+  const onRefresh = async () => {
+    setRefreshing(true)
+    await fetchCourses({
+      search: debouncedSearch,
+      category: category === 'All' ? undefined : category,
+    })
+    setRefreshing(false)
+  }
+
+  useEffect(() => {
+    
+    fetchCourses({
+      search: debouncedSearch,
+      category: category === 'All' ? undefined : category,
+    })
+  }, [debouncedSearch, category])
+
+  const renderItem = useCallback(
+    ({ item, index }: { item: Course; index: number }) => (
+      <CourseItem item={item} index={index} />
+    ),
+    [],
+  )
 
   return (
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      {/* ── HEADER (Unified with background) ── */}
-      <View
-        className="px-6 pt-10 pb-2 bg-white"
-        style={{ paddingTop: Platform.OS === 'ios' ? 60 : 40 }}
-      >
-        <Animated.View
-          entering={FadeInUp.duration(600).springify().damping(20)}
-        >
-          <Text className="text-[34px] font-bold text-[#1C3734] tracking-tight mb-6 mt-2">
-            Explore
-          </Text>
-
-          {/* Minimalist Search Bar */}
-          <View className="flex-row items-center bg-[#F4F6F6] rounded-full px-5 h-[52px]">
-            <Feather name="search" size={20} color="#92A5A3" />
-            <TextInput
-              placeholder="Search courses, mentors..."
-              placeholderTextColor="#92A5A3"
-              className="flex-1 ml-3 text-[15px] font-medium text-[#1C3734]"
-              value={search}
-              onChangeText={setSearch}
-            />
-            {/* Filter Icon inside search bar for a cleaner look */}
-            <Pressable className="pl-3 border-l border-black/5">
-              <Feather name="sliders" size={18} color="#229F92" />
-            </Pressable>
-          </View>
-        </Animated.View>
-      </View>
-
-      <ScrollView
+      <FlatList
+        data={courses}
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 120 }}
-      >
-        {/* ── CATEGORIES ── */}
-        <Animated.View
-          entering={FadeInDown.delay(200).duration(600)}
-          className="pt-6 pb-2"
-        >
-          {/* We pad the scrollview content slightly differently to let pills bleed */}
-          <View className="px-1">
-            <CategoryFilter />
-          </View>
-        </Animated.View>
-
-        {/* ── RESULTS ── */}
-        <View className="px-4 mt-6">
-          <View className="px-2 mb-5 flex-row justify-between items-end">
-            <Text className="text-[13px] font-bold text-[#92A5A3] uppercase tracking-widest">
-              Top Results
-            </Text>
-            <Pressable>
-              <Text className="text-[13px] font-semibold text-[#229F92]">
-                Filters
-              </Text>
-            </Pressable>
-          </View>
-
-          {/* Vertical List of Course Cards */}
-          <View>
-            {POPULAR_COURSES.map((course, i) => (
-              <Animated.View
-                key={course.id}
-                entering={FadeInDown.delay(300 + 100 * i).duration(600)}
-              >
-                <CourseCard
-                  {...course}
-                  delay={0} // Animation handled by the wrapper
-                />
-              </Animated.View>
-            ))}
-
-            {/* Repeated for visual density */}
-            {POPULAR_COURSES.map((course, i) => (
-              <Animated.View
-                key={course.id + '_2'}
-                entering={FadeInDown.delay(700 + 100 * i).duration(600)}
-              >
-                <CourseCard {...course} delay={0} />
-              </Animated.View>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+        maxToRenderPerBatch={10}
+        windowSize={5}
+        ListHeaderComponent={
+          <ExploreHeader
+            search={search}
+            setSearch={setSearch}
+            category={category}
+            setCategory={setCategory}
+            coursesCount={courses.length}
+            isLoading={isLoading}
+          />
+        }
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        // ListEmptyComponent={
+        //   !isLoading ? (
+        //     <Animated.View
+        //       entering={FadeInDown}
+        //       className="items-center mt-20 px-10"
+        //     >
+        //       <View className="w-20 h-20 bg-gray-50 rounded-full items-center justify-center mb-4">
+        //         <Feather name="search" size={32} color="#92A5A3" />
+        //       </View>
+        //       <Text className="text-[16px] font-bold text-foreground-strong mb-2">
+        //         No Results Found
+        //       </Text>
+        //       <Text className="text-center text-foreground-muted">
+        //         We couldn't find any courses matching "{search}". Try a
+        //         different keyword or category.
+        //       </Text>
+        //     </Animated.View>
+        //   ) : null
+        // }
+        renderItem={renderItem}
+      />
     </View>
   )
 }

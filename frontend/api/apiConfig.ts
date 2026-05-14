@@ -1,15 +1,6 @@
-/**
- * apiConfig.ts — Learnify
- * 
- * Centralized API configuration and fetch wrapper.
- */
-
 import useAuthStore from "../store/useAuthStore";
 
-// Adjust the BASE_URL to your backend's IP/port.
-// 10.0.2.2 is the default for Android Emulator to reach localhost on the host.
-// For iOS or physical devices, use your computer's local IP (e.g., 192.168.1.x).
-export const API_BASE_URL = 'http://10.0.2.2:5000/api';
+export const API_BASE_URL = 'https://learnify-8a08.onrender.com/api'
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
@@ -29,15 +20,28 @@ export const apiFetch = async (endpoint: string, options: FetchOptions = {}) => 
     ...options.headers,
   };
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+
   const config: RequestInit = {
     ...options,
     headers,
     body: options.body ? JSON.stringify(options.body) : undefined,
+    signal: controller.signal,
   };
 
   try {
+    console.log(`Fetching: ${url}`, { method: options.method || 'GET', hasToken: !!token });
     const response = await fetch(url, config);
-    const data = await response.json();
+    clearTimeout(timeoutId);
+    
+    let data;
+    try {
+      data = await response.json();
+    } catch (e) {
+      console.error('Failed to parse JSON response', e);
+      throw new Error(`Server returned non-JSON response: ${response.status} ${response.statusText}`);
+    }
 
     if (!response.ok) {
       throw new Error(data.message || 'Something went wrong');
@@ -45,7 +49,11 @@ export const apiFetch = async (endpoint: string, options: FetchOptions = {}) => 
 
     return data;
   } catch (error: any) {
-    console.error(`API Error [${options.method || 'GET'} ${endpoint}]:`, error);
+    console.error(`API Error [${options.method || 'GET'} ${endpoint}]:`, {
+      message: error.message,
+      url: url,
+      stack: error.stack
+    });
     throw error;
   }
 };

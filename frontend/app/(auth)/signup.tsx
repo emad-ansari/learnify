@@ -24,6 +24,9 @@ import { FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import React, { useCallback, useState } from 'react'
+import Toast from 'react-native-toast-message'
+import { apiFetch } from '@/api/apiConfig'
+import useAuthStore from '@/store/useAuthStore'
 import {
   Image,
   Pressable,
@@ -172,10 +175,35 @@ export default function SignupScreen() {
     return Object.keys(e).length === 0
   }, [username, email, password])
 
-  const handleSignup = () => {
+  const setAuth = useAuthStore((state) => state.setAuth)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSignup = async () => {
     if (validate()) {
-      // TODO: wire to your auth logic
-      console.log('Sign up →', { username, email })
+      setIsLoading(true)
+      setErrors({})
+      try {
+        const response = await apiFetch('/auth/register', {
+          method: 'POST',
+          body: { name: username, email, password },
+        })
+        setAuth(response.data.user, response.data.token)
+        Toast.show({
+          type: 'success',
+          text1: 'Account Created!',
+          text2: 'Welcome to Learnify!',
+        })
+        router.replace('/(tabs)')
+      } catch (error: any) {
+        setErrors({ general: error.message || 'Registration failed' })
+        Toast.show({
+          type: 'error',
+          text1: 'Registration Failed',
+          text2: error.message || 'Could not create account',
+        })
+      } finally {
+        setIsLoading(false)
+      }
     }
   }
 
@@ -246,6 +274,10 @@ export default function SignupScreen() {
             anytime, anywhere.
           </Animated.Text>
 
+          {errors.general && (
+            <Text className="text-red-500 text-xs text-center mb-4">{errors.general}</Text>
+          )}
+
           {/* User Name Field */}
           <View className="mb-5">
             <Text className="text-secondary-light font-medium text-sm mb-1.5">
@@ -314,11 +346,12 @@ export default function SignupScreen() {
           >
             <TouchableOpacity
               onPress={handleSignup}
+              disabled={isLoading}
               activeOpacity={0.7}
-              className="bg-primary rounded-btn py-4 items-center shadow-lg shadow-primary elevation-8"
+              className={`bg-primary rounded-btn py-4 items-center shadow-lg shadow-primary elevation-8 ${isLoading ? 'opacity-70' : ''}`}
             >
               <Text className="text-white text-base font-bold tracking-[0.3px]">
-                Sign Up
+                {isLoading ? 'Signing Up...' : 'Sign Up'}
               </Text>
             </TouchableOpacity>
           </Animated.View>
