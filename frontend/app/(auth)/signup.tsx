@@ -1,25 +1,3 @@
-/**
- * SignupScreen.tsx — Learnify
- *
- * Stack: Expo + NativeWind v4 + React Native Reanimated v3
- *
- * Animations used:
- *  1. Hero image   — slides + fades in from above (FadeInDown)
- *  2. Form card    — springs up from below (FadeInUp with spring)
- *  3. Badge        — scale-bounces in after card (ZoomIn)
- *  4. Each field   — staggered fade-in left-to-right (FadeInLeft)
- *  5. Button       — pulse scale loop while idle (withRepeat)
- *  6. Input focus  — border color animates via useAnimatedStyle
- *  7. Button press — scale-down spring on press (useSharedValue)
- *
- * Dependencies to install (if not already):
- *   npx expo install react-native-reanimated
- *   npx expo install expo-linear-gradient
- *   npx expo install @expo-google-fonts/poppins expo-font
- *   npm install nativewind   (v4)
- *   npm install react-native-svg   (for inline SVG icons)
- */
-
 import { FontAwesome6, Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
@@ -246,7 +224,7 @@ export default function SignupScreen() {
 
         {/* ── Form card ── */}
         <Animated.View
-          entering={FadeInUp.delay(200).duration(600).springify().damping(18)}
+          entering={FadeInUp.delay(200).duration(600)}
           className="mt-4 bg-primary-subtle px-6 py-4  "
           style={{
             borderTopLeftRadius: 32,
@@ -255,7 +233,7 @@ export default function SignupScreen() {
         >
           {/* Welcome badge */}
           <Animated.View
-            entering={ZoomIn.delay(400).duration(450).springify()}
+            entering={ZoomIn.delay(400).duration(450)}
             className="items-center mb-4"
           >
             <View className="bg-primary-muted rounded-full px-4 py-1 flex items-center justify-center">

@@ -120,7 +120,7 @@ export default function SigninScreen() {
 
         {/* ── Form card ── */}
         <Animated.View
-          entering={FadeInUp.delay(200).duration(600).springify().damping(18)}
+          entering={FadeInUp.delay(200).duration(600)}
           className="mt-4 bg-primary-subtle px-6 py-4 flex-1 "
           style={{
             borderTopLeftRadius: 32,
@@ -129,7 +129,7 @@ export default function SigninScreen() {
         >
           {/* Welcome badge */}
           <Animated.View
-            entering={ZoomIn.delay(400).duration(450).springify()}
+            entering={ZoomIn.delay(400)}
             className="items-center mb-4"
           >
             <View className="bg-primary-muted rounded-full px-4 py-1 flex items-center justify-center">
