@@ -27,8 +27,6 @@ export const ContinueCard: React.FC<ContinueCardProps> = ({
     transform: [{ scale: scale.value }],
   }))
 
-  console.log('course_thumbnail', course_thumbnail)
-
   return (
     <Animated.View
       entering={FadeInRight.delay(delay).duration(500).springify()}
@@ -70,9 +68,7 @@ export const ContinueCard: React.FC<ContinueCardProps> = ({
                 delay={delay + 300}
               />
             </View>
-            <Text
-              className="text-[11px] font-semibold text-primary"
-            >
+            <Text className="text-[11px] font-semibold text-primary">
               {Math.round(progress * 100)}%
             </Text>
           </View>
