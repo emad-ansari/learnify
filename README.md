@@ -1,50 +1,316 @@
-# Welcome to your Expo app 👋
+# 🚀 Learnify — Modern E-Learning Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<div align="center">
 
-## Get started
+![React Native](https://img.shields.io/badge/React%20Native-0.7+-61DAFB?style=for-the-badge\&logo=react)
+![Expo](https://img.shields.io/badge/Expo-Framework-000020?style=for-the-badge\&logo=expo)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge\&logo=typescript\&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-State%20Management-593D88?style=for-the-badge)
+![Express.js](https://img.shields.io/badge/Express.js-Backend-000000?style=for-the-badge\&logo=express)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?style=for-the-badge\&logo=postgresql\&logoColor=white)
 
-1. Install dependencies
+### A modern, elegant, and production-ready e-learning mobile application built with React Native and Expo.
 
-   ```bash
-   npm install
-   ```
+</div>
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+# ✨ Features
 
-In the output, you'll find options to open the app in a
+## 🔐 Authentication
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+* Secure user authentication
+* Sign In & Sign Up screens
+* Persistent login session
+* Zustand-based auth management
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📚 Course System
 
-## Get a fresh project
+* Explore all available courses
+* Featured courses carousel
+* Popular courses section
+* Course detail pages
+* Real-time search functionality
+* Category-based filtering
+* Pull-to-refresh support
 
-When you're ready, run:
+## 🎨 Premium UI/UX
+
+* Smooth animations using Reanimated
+* Modern clean mobile UI
+* Skeleton loading states
+* Responsive layouts
+* Beautiful card-based design
+* Production-level loading experience
+
+## 👤 Profile System
+
+* User profile dashboard
+* Upload avatar/profile picture
+* Cloudinary image upload integration
+* Learning progress overview
+* Statistics section
+
+## 📖 Learning Features
+
+* Enrolled courses tracking
+* Course progress tracking
+* Current learning section
+* Bookmark-ready architecture
+
+---
+
+# 📱 App Screens
+
+## 🔑 Authentication Screens
+
+| Sign In                             | Sign Up                             |
+| ----------------------------------- | ----------------------------------- |
+| ![SignIn](./frontend/assets/screens/login-screen.png) | ![SignUp](./screenshots/signup.png) |
+
+---
+
+## 🏠 Home Screen
+
+| Home Screen                     |
+| ------------------------------- |
+| ![Home](./frontend/assets//screens//home-screen.png) |
+
+### Features:
+
+* Featured course carousel
+* Popular courses horizontal scroll
+* Smooth entrance animations
+* Skeleton loaders
+
+---
+
+## 🔎 Explore Screen
+
+| Explore Courses                       | 
+| ------------------------------------- | 
+| ![Explore](./frontend/assets//screens//explore-screen.png) 
+
+### Features:
+
+* Debounced search
+* Category filters
+* Optimized FlatList rendering
+* Pull to refresh
+* Empty state UI
+
+---
+
+## 👤 Profile Screen
+
+| User Profile                                     |
+| -------------------------------------------------- |
+| ![Profile](./frontend/assets/screens/profile-screen.png) |
+
+### Features:
+
+* Avatar upload
+* Learning statistics
+* Current progress section
+* Clean settings layout
+
+---
+
+## 👤 Profile Screen
+
+| Profile                               |
+| ------------------------------------- |
+| ![Profile](./screenshots/profile.png) |
+
+### Features:
+
+* Avatar upload
+* Learning statistics
+* Current progress section
+* Clean settings layout
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+* React Native
+* Expo
+* TypeScript
+* Expo Router
+* Zustand
+* React Native Reanimated
+* NativeWind
+* Moti
+* Expo Image Picker
+* React Native Toast Message
+
+## Backend
+
+* Node.js
+* Express.js
+* PostgreSQL
+* Drizzle ORM
+* JWT Authentication
+* Cloudinary
+
+---
+
+# ⚡ Performance Optimizations
+
+* Optimized FlatList rendering
+* Debounced search requests
+* Skeleton loading states
+* Memoized components
+* Efficient Zustand store structure
+* Smooth animations with Reanimated
+* Lazy image loading
+
+---
+
+# 📂 Project Structure
 
 ```bash
-npm run reset-project
+learnify/
+│
+├── app/
+│   ├── (auth)/
+│   ├── (tabs)/
+│   ├── course-details/
+│   └── _layout.tsx
+│
+├── components/
+│   ├── skeletons/
+│   ├── ui/
+│   └── cards/
+│
+├── store/
+│   ├── useAuthStore.ts
+│   ├── useCourseStore.ts
+│   └── useProfileStore.ts
+│
+├── api/
+├── assets/
+├── hooks/
+└── utils/
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+# ☁️ Cloudinary Avatar Upload
 
-To learn more about developing your project with Expo, look at the following resources:
+The app supports real-time profile image uploads using Cloudinary.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Features
 
-## Join the community
+* Pick image from gallery
+* Crop image before upload
+* Upload directly to Cloudinary
+* Save image URL in backend
+* Instant UI update after upload
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# 🚀 Getting Started
+
+## 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/your-username/learnify.git
+cd learnify
+```
+
+---
+
+## 2️⃣ Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+## 3️⃣ Setup Environment Variables
+
+Create a `.env` file in the frontend:
+
+```env
+EXPO_PUBLIC_API_URL=your_backend_url
+EXPO_PUBLIC_CLOUDINARY_URL=your_cloudinary_upload_url
+EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
+```
+
+---
+
+## 4️⃣ Run App
+
+```bash
+npx expo start
+```
+
+---
+
+# 📸 Adding Screenshots
+
+Create a folder named:
+
+```bash
+/screenshots
+```
+
+Then add images:
+
+```bash
+signin.png
+signup.png
+home.png
+explore.png
+search.png
+course-details.png
+profile.png
+```
+
+---
+
+# 🌟 Future Improvements
+
+* Video player integration
+* Course certificates
+* Payment gateway integration
+* Dark mode support
+* Offline downloads
+* Push notifications
+* AI-based recommendations
+* Wishlist system
+* Instructor dashboard
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+Feel free to fork this project and improve it.
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+# 👨‍💻 Developer
+
+### Mohammad Emad
+
+Passionate Full Stack & Mobile App Developer focused on building clean, modern, and user-friendly applications.
+
+---
+
+<div align="center">
+
+### ⭐ If you like this project, give it a star on GitHub ⭐
+
+</div>

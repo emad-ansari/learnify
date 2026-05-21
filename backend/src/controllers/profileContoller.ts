@@ -3,10 +3,7 @@ import { getProfileStats } from "../queries/profileQuery";
 import { updateUserAvatar } from "../queries/userQuery";
 import { AuthRequest } from "../middleware/auth.middleware";
 
-export const fetchProfileStats = async (
-  req: AuthRequest,
-  res: Response
-) => {
+export const fetchProfileStats = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
 
@@ -28,10 +25,11 @@ export const updateAvatar = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
     const { avatarUrl } = req.body;
-    console.log('avatar url: ', avatarUrl)
 
     if (!avatarUrl) {
-      return res.status(400).json({ success: false, message: "Avatar URL is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Avatar URL is required" });
     }
 
     const updatedUser = await updateUserAvatar(userId, avatarUrl);
