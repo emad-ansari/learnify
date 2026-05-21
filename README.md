@@ -58,78 +58,55 @@
 * Current learning section
 * Bookmark-ready architecture
 
----
-
 # 📱 App Screens
 
 ## 🔑 Authentication Screens
 
-| Sign In                             | Sign Up                             |
-| ----------------------------------- | ----------------------------------- |
-| ![SignIn](./frontend/assets/screens/login-screen.png) | ![SignUp](./screenshots/signup.png) |
+<p align="center">
+  <img src="./frontend/assets/screens/login-screen.png" width="230" />
+  <img src="./screenshots/signup.png" width="230" />
+</p>
 
 ---
 
-## 🏠 Home Screen
+## 🏠 Main Screens
 
-| Home Screen                     |
-| ------------------------------- |
-| ![Home](./frontend/assets//screens//home-screen.png) |
+<p align="center">
+  <img src="./frontend/assets/screens/home-screen.png" width="230" />
+  <img src="./frontend/assets/screens/explore-screen.png" width="230" />
+</p>
+
+<p align="center">
+  <b>Home Screen</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <b>Explore Screen</b>
+</p>
 
 ### Features:
-
-* Featured course carousel
-* Popular courses horizontal scroll
-* Smooth entrance animations
-* Skeleton loaders
+- Featured course carousel
+- Category filters
+- Debounced search
+- Smooth animations
+- Skeleton loaders
 
 ---
 
-## 🔎 Explore Screen
+## 👤 Profile & Learning
 
-| Explore Courses                       | 
-| ------------------------------------- | 
-| ![Explore](./frontend/assets//screens//explore-screen.png) 
+<p align="center">
+  <img src="./frontend/assets/screens/profile-screen.png" width="230" />
+  <img src="./frontend/assets/screens/course-details.png" width="230" />
+</p>
+
+<p align="center">
+  <b>Profile Screen</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <b>Course Details</b>
+</p>
 
 ### Features:
-
-* Debounced search
-* Category filters
-* Optimized FlatList rendering
-* Pull to refresh
-* Empty state UI
-
----
-
-## 👤 Profile Screen
-
-| User Profile                                     |
-| -------------------------------------------------- |
-| ![Profile](./frontend/assets/screens/profile-screen.png) |
-
-### Features:
-
-* Avatar upload
-* Learning statistics
-* Current progress section
-* Clean settings layout
-
----
-
-## 👤 Profile Screen
-
-| Profile                               |
-| ------------------------------------- |
-| ![Profile](./screenshots/profile.png) |
-
-### Features:
-
-* Avatar upload
-* Learning statistics
-* Current progress section
-* Clean settings layout
-
----
+- Avatar upload
+- Learning statistics
+- Course details
+- Progress tracking
 
 # 🛠️ Tech Stack
 
